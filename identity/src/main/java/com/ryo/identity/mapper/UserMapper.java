@@ -1,0 +1,43 @@
+package com.ryo.identity.mapper;
+
+import com.ryo.identity.constant.Role;
+import com.ryo.identity.dto.request.CreateUserRequest;
+import com.ryo.identity.dto.response.UserResponse;
+import com.ryo.identity.entity.User;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+public class UserMapper {
+
+    PasswordEncoder passwordEncoder;
+
+    public User createUserRequest2User(CreateUserRequest reqest){
+        return User.builder()
+                .email(reqest.getEmail())
+                .role(reqest.getRole())
+                .username(reqest.getUsername())
+                .lastName(reqest.getLastName())
+                .firstName(reqest.getFirstName())
+                .email(reqest.getEmail())
+                .password(passwordEncoder.encode(reqest.getPassword()))
+                .avatarImg("")
+                .build();
+    }
+
+    public UserResponse user2UserResponse(User user){
+        return UserResponse.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .id(user.getId())
+                .role(user.getRole())
+                .build();
+    }
+}
