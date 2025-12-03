@@ -15,6 +15,10 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
+    EMAIL_ALREADY_EXISTS(1009, "This email is already exist", HttpStatus.BAD_REQUEST),
+    USERNAME_ALREADY_EXISTS(1010, "This user is already exist", HttpStatus.BAD_REQUEST),
+    CONFIRM_PASSWORD_NOT_MATCH(1011, "Confirm password not match", HttpStatus.BAD_REQUEST),
+    HAVE_NOT_VERIFY_EMAIL(1012, "This account email hasnt been verifed", HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

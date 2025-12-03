@@ -25,11 +25,11 @@ public class ApplicationInitConfig {
 
     @NonFinal
     @Value("${admin.username}")
-    protected final String ADMIN_USER_NAME;
+    String ADMIN_USER_NAME;
 
     @NonFinal
     @Value("${admin.password}")
-    protected final String ADMIN_PASSWORD;
+    String ADMIN_PASSWORD;
 
     @Bean
     @ConditionalOnProperty(
@@ -47,6 +47,7 @@ public class ApplicationInitConfig {
                         .avatarImg("")
                         .firstName("ADMIN")
                         .lastName("ADMIN")
+                        .verifyEmail(true)
                         .email("admin@gmail.com")
                         .role(Role.ADMIN)
                         .build();

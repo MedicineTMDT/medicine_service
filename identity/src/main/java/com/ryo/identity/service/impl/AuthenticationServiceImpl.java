@@ -28,6 +28,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,7 +57,12 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
 
+    @NonFinal
+    @Value("${spring.mail.username}")
+    protected String emailAddress;
+
     UserMapper userMapper;
+    JavaMailSender mailSender;
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     PasswordEncoder passwordEncoder;
@@ -64,6 +71,16 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     public UserResponse createUser(@Valid @RequestBody CreateUserRequest request){
         User user = userMapper.createUserRequest2User(request);
         try{
+            userRepository.save(user);
+            String otp = String.valueOf((int) ((Math.random() * 900000) + 100000));
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(emailAddress);
+            message.setTo(user.getEmail());
+            message.setSubject("Mã xác thực OTP");
+            message.setText("Mã OTP của bạn là: " + otp + "\nMã có hiệu lực trong 5 phút.");
+
+            mailSender.send(message);
+            user.setVerifyEmailToken(otp);
             userRepository.save(user);
         }catch(DataIntegrityViolationException e){
             throw new AppException(ErrorCode.USER_EXISTED);
@@ -78,6 +95,9 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
+        if(!user.getVerifyEmail()){
+            throw new AppException(ErrorCode.HAVE_NOT_VERIFY_EMAIL);
+        }
         String password = request.getPassword();
         var isValid = passwordEncoder.matches(password, user.getPassword());
         if(isValid){
@@ -145,6 +165,32 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         return IntrospectResponse.builder().valid(isValid).build();
     }
 
+    public AuthenticationResponse verifyForgotPasswordToken(String token, String email){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if(!user.getVerifyEmail()){
+            throw new AppException(ErrorCode.HAVE_NOT_VERIFY_EMAIL);
+        }
+        if(user.getForgotPasswordToken().equals(token)){
+            return AuthenticationResponse.builder()
+                    .token(generateToken(user))
+                    .authenticated(true)
+                    .build();
+        }else
+        {
+            return AuthenticationResponse.builder()
+                    .token("")
+                    .authenticated(false)
+                    .build();
+        }
+    }
+
+    public void verifyEmailAddres(String email, String token){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if(token.equals(user.getVerifyEmailToken())){
+            user.setVerifyEmail(true);
+        }
+    }
+
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
@@ -170,6 +216,13 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             throw new RuntimeException(e);
         }
     }
+
+    public String generateTokenFromEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return generateToken(user);
+    }
+
 
     private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());

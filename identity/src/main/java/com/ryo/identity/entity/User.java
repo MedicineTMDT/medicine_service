@@ -30,9 +30,14 @@ public class User {
     String lastName;
 
 
-    @Column(name = "username", unique = true, nullable = false,
+    @Column(name = "email", unique = true, nullable = false,
             columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String email;
 
     Role role;
+
+    String forgotPasswordToken;
+    String verifyEmailToken;
+
+    Boolean verifyEmail;
 }

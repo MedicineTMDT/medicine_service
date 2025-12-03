@@ -2,6 +2,7 @@ package com.ryo.identity.mapper;
 
 import com.ryo.identity.constant.Role;
 import com.ryo.identity.dto.request.CreateUserRequest;
+import com.ryo.identity.dto.request.EditUserRequest;
 import com.ryo.identity.dto.response.UserResponse;
 import com.ryo.identity.entity.User;
 import lombok.AccessLevel;
@@ -27,8 +28,34 @@ public class UserMapper {
                 .email(reqest.getEmail())
                 .password(passwordEncoder.encode(reqest.getPassword()))
                 .avatarImg("")
+                .forgotPasswordToken("")
+                .verifyEmail(false)
                 .build();
     }
+
+    public void editUserRequest(User user, EditUserRequest request) {
+
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+
+        if (request.getUsername() != null) {
+            user.setUsername(request.getUsername());
+        }
+
+        if (request.getLastName() != null) {
+            user.setLastName(request.getLastName());
+        }
+
+        if (request.getFirstName() != null) {
+            user.setFirstName(request.getFirstName());
+        }
+
+        if (request.getAvatarImg() != null) {
+            user.setAvatarImg(request.getAvatarImg());
+        }
+    }
+
 
     public UserResponse user2UserResponse(User user){
         return UserResponse.builder()
