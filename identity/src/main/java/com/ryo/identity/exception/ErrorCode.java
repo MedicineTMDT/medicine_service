@@ -18,7 +18,9 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS(1009, "This email is already exist", HttpStatus.BAD_REQUEST),
     USERNAME_ALREADY_EXISTS(1010, "This user is already exist", HttpStatus.BAD_REQUEST),
     CONFIRM_PASSWORD_NOT_MATCH(1011, "Confirm password not match", HttpStatus.BAD_REQUEST),
-    HAVE_NOT_VERIFY_EMAIL(1012, "This account email hasnt been verifed", HttpStatus.BAD_REQUEST)
+    HAVE_NOT_VERIFY_EMAIL(1012, "This account email hasnt been verifed", HttpStatus.BAD_REQUEST),
+    NOT_FOUND(1013, "Resources not found", HttpStatus.BAD_REQUEST),
+    SLUG_EXISTS(1014, "This slug is already existed", HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
