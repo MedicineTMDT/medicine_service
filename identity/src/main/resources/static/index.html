@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google OAuth2 Test</title>
+</head>
+<body>
+
+<h2>OAuth2 Google Login Test</h2>
+
+<button onclick="loginGoogle()">Login with Google</button>
+
+<script>
+    function loginGoogle() {
+        window.location.href = "/oauth2/authorization/google";
+    }
+
+    // Nhận token khi redirect về
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+        document.write("<h3>Login thành công!</h3>");
+        document.write("<p><b>Token:</b></p>");
+        document.write("<textarea style='width:500px;height:150px'>" + token + "</textarea>");
+    }
+</script>
+
+</body>
+</html>
