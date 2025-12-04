@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -22,6 +24,10 @@ import java.io.IOException;
 // /oauth2/authorization/google
 // trả về /login/oauth2/code/google
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
+    @NonFinal
+    @Value("${frontend.url}")
+    protected String frontendUrl;
 
     UserRepository userRepository;
     AuthenticationServiceImpl authenticationService;
@@ -45,6 +51,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             newUser.setFirstName(firstName);
             newUser.setLastName(lastName);
             newUser.setUsername(generateUniqueUsername(email));
+            newUser.setAvatarImg("");
             newUser.setVerifyEmail(true);                   // Google đã verify email
             newUser.setPassword("");                       // Không dùng password
             newUser.setRole(Role.USER);               // Set role
@@ -55,8 +62,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String token = authenticationService.generateTokenFromEmail(email);
 
         // 3️⃣ Redirect về FE
-        String redirectUrl =
-                "http://localhost:3000/oauth2/success?token=" + token;
+        String redirectUrl = frontendUrl +
+                "/oauth2/success?token=" + token;
 
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }

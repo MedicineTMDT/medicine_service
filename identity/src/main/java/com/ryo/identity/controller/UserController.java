@@ -1,6 +1,7 @@
 package com.ryo.identity.controller;
 
 import com.ryo.identity.dto.request.EditUserRequest;
+import com.ryo.identity.dto.response.ApiResponse;
 import com.ryo.identity.dto.response.UserResponse;
 import com.ryo.identity.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -19,29 +20,37 @@ public class UserController {
     UserServiceImpl userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable String id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    public ApiResponse<UserResponse> getUserById(@PathVariable String id) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUserById(id))
+                .build();
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+    public ApiResponse<?> forgotPassword(@RequestParam String email) {
         userService.forgotPassword(email);
-        return ResponseEntity.ok("OTP đã được gửi vào email.");
+        return ApiResponse.builder()
+                .message("OTP code has been sent to your email")
+                .build();
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<UserResponse> editUserInfo(
+    public ApiResponse<UserResponse> editUserInfo(
             @Valid @RequestBody EditUserRequest request
     ) {
-        return ResponseEntity.ok(userService.editUserInfo(request));
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.editUserInfo(request))
+                .build();
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(
+    public ApiResponse<?> changePassword(
             @RequestParam String newPassword
     ) {
         userService.changeUserPassword(newPassword);
-        return ResponseEntity.ok("Đổi mật khẩu thành công.");
+        return ApiResponse.builder()
+                .message("Your password has been changed successfully")
+                .build();
     }
 
 }

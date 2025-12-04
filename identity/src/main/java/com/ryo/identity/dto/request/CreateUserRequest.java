@@ -20,17 +20,11 @@ public class CreateUserRequest {
 
     @NotBlank
     @Size(min = 6, max = 20, message = "Password must be between {min} to {max} characters")
-    @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special character and must be at least 8 characters long"
-    )
     String password;
 
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "First name must contain only letters")
     @NotBlank
     String firstName;
 
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "Last name must contain only letters")
     @NotBlank
     String lastName;
 

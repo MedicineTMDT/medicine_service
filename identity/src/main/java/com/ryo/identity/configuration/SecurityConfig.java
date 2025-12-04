@@ -23,7 +23,21 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/auth/register", "auth/introspect", "auth/logout", "auth/login"
+            "/api/v1/auth/register",
+            "/api/v1/auth/login",
+            "/api/v1/auth/verify-email",
+            "/api/v1/auth/verify-forgot-password",
+            "/api/v1/auth/introspect",
+            "/api/v1/users/forgot-password",
+
+            "/",                       // index.html test
+            "/index.html",
+
+            "/oauth2/**",              // cần mở cho google
+            "/login/oauth2/**",
+            "/oauth2/authorization/**", // <- FE gọi
+            "/login/oauth2/code/**",
+            "/oauth2/success/**"       // FE nhận token
     };
 
     @Autowired

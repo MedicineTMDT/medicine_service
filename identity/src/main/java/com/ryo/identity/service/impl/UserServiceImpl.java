@@ -41,12 +41,6 @@ public class UserServiceImpl {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        // Check email unique
-        if (request.getEmail() != null && !request.getEmail().isBlank() &&
-                userRepository.existsByEmailAndIdNot(request.getEmail(), user.getId())) {
-            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
-        }
-
         // Check username unique
         if (request.getUsername() != null && !request.getUsername().isBlank() &&
                 userRepository.existsByUsernameAndIdNot(request.getUsername(), user.getId())) {
@@ -66,6 +60,20 @@ public class UserServiceImpl {
         User user  = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(emailAddress);
+        message.setTo(user.getEmail());
+        message.setSubject("Mật khẩu của bạn đã được thay đổi");
+        message.setText(
+                "Xin chào " + user.getFirstName() + ",\n\n" +
+                        "Mật khẩu tài khoản của bạn vừa được thay đổi thành công.\n" +
+                        "Nếu bạn không thực hiện hành động này, vui lòng liên hệ ngay với bộ phận hỗ trợ.\n\n" +
+                        "Trân trọng,\n" +
+                        "Đội ngũ hỗ trợ"
+        );
+
+        mailSender.send(message);
     }
 
     public UserResponse getUserById(String userId) {
@@ -74,7 +82,6 @@ public class UserServiceImpl {
 
         return userMapper.user2UserResponse(user);
     }
-
 
     public void forgotPassword(String email){
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

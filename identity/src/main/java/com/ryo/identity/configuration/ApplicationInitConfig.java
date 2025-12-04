@@ -32,10 +32,10 @@ public class ApplicationInitConfig {
     String ADMIN_PASSWORD;
 
     @Bean
-    @ConditionalOnProperty(
-            prefix = "spring",
-            value = "datasource.driverClassName",
-            havingValue = "com.mysql.cj.jdbc.Driver")
+//    @ConditionalOnProperty(
+//            prefix = "spring",
+//            value = "datasource.driverClassName",
+//            havingValue = "com.mysql.cj.jdbc.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         log.info("Initializing application.....");
         return args -> {

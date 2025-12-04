@@ -29,9 +29,5 @@ public class EditUserRequest {
     @NotBlank
     String lastName;
 
-    @Email
-    @NotBlank
-    String email;
-
     String avatarImg;
 }

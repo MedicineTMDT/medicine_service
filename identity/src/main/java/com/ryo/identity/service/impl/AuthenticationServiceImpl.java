@@ -70,6 +70,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     @Override
     public UserResponse createUser(@Valid @RequestBody CreateUserRequest request){
         User user = userMapper.createUserRequest2User(request);
+        log.info("flag1");
         try{
             userRepository.save(user);
             String otp = String.valueOf((int) ((Math.random() * 900000) + 100000));
@@ -102,6 +103,12 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         var isValid = passwordEncoder.matches(password, user.getPassword());
         if(isValid){
             return AuthenticationResponse.builder()
+                    .id(user.getId())
+                    .role(user.getRole())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .username(user.getUsername())
+                    .firstName(user.getFirstName())
                     .authenticated(isValid)
                     .token(generateToken(user))
                     .build();
@@ -172,6 +179,12 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         }
         if(user.getForgotPasswordToken().equals(token)){
             return AuthenticationResponse.builder()
+                    .id(user.getId())
+                    .role(user.getRole())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .username(user.getUsername())
+                    .firstName(user.getFirstName())
                     .token(generateToken(user))
                     .authenticated(true)
                     .build();
@@ -188,6 +201,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         if(token.equals(user.getVerifyEmailToken())){
             user.setVerifyEmail(true);
+            userRepository.save(user);
         }
     }
 
@@ -196,12 +210,12 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
-                .issuer("devteria.com")
+                .issuer("med.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope", user.getRole().toString())
+                .claim("scope", user.getRole())
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());

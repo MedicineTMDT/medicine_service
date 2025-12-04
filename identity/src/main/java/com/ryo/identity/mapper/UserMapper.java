@@ -35,10 +35,6 @@ public class UserMapper {
 
     public void editUserRequest(User user, EditUserRequest request) {
 
-        if (request.getEmail() != null) {
-            user.setEmail(request.getEmail());
-        }
-
         if (request.getUsername() != null) {
             user.setUsername(request.getUsername());
         }

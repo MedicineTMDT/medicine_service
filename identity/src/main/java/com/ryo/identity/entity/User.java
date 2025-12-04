@@ -5,16 +5,19 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @Column(name = "username", unique = true,
-            columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    @Column(name = "username", unique = true)
     String username;
 
     @Column(nullable = false)
@@ -30,8 +33,7 @@ public class User {
     String lastName;
 
 
-    @Column(name = "email", unique = true, nullable = false,
-            columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    @Column(name = "email", unique = true, nullable = false)
     String email;
 
     Role role;
@@ -40,4 +42,8 @@ public class User {
     String verifyEmailToken;
 
     Boolean verifyEmail;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Request> requestList = new ArrayList<>();
+
 }
