@@ -56,8 +56,8 @@ public class UserServiceImpl {
 
     @PreAuthorize("request.username == authentication.name")
     public void changeUserPassword(String newPassword){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user  = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user  = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
