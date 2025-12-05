@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MergedIngredientResponse {
+public class DrugSimpleResponse {
     private Integer id;
     private String name;
-//    private String sourceTable;
-//    private Integer sourceId;
+    private String slug;
+    private String imageLink;
 }

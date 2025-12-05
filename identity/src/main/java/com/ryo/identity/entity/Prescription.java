@@ -33,4 +33,6 @@ public class Prescription {
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Intake> intakes = new ArrayList<>();
 
+    // do sth here about prescription info :vvvx
+
 }

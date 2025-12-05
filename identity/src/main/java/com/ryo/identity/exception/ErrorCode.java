@@ -20,7 +20,11 @@ public enum ErrorCode {
     CONFIRM_PASSWORD_NOT_MATCH(1011, "Confirm password not match", HttpStatus.BAD_REQUEST),
     HAVE_NOT_VERIFY_EMAIL(1012, "This account email hasnt been verifed", HttpStatus.BAD_REQUEST),
     NOT_FOUND(1013, "Resources not found", HttpStatus.BAD_REQUEST),
-    SLUG_EXISTS(1014, "This slug is already existed", HttpStatus.BAD_REQUEST)
+    SLUG_EXISTS(1014, "This slug is already existed", HttpStatus.BAD_REQUEST),
+    DRUG_EXISTS(1015, "This drug is already existed", HttpStatus.BAD_REQUEST),
+    DRUG_NOT_EXIST(1016, "Drug not found", HttpStatus.BAD_REQUEST),
+    INGREDIENT_NOT_EXIST(1017, "Ingredient not found", HttpStatus.BAD_REQUEST),
+    DRUG_INTERACTION_NOT_FOUND(1018, "Drug Interaction not found", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
