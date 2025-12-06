@@ -2,6 +2,7 @@ package com.ryo.identity.service.impl;
 
 import com.ryo.identity.constant.TypeOfRequest;
 import com.ryo.identity.dto.request.CreateSuggestionRequest;
+import com.ryo.identity.dto.response.NotificationResponse;
 import com.ryo.identity.entity.Request;
 import com.ryo.identity.entity.User;
 import com.ryo.identity.exception.AppException;
@@ -14,8 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,17 @@ public class RequestServiceImpl implements IRequestService {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
+    private void sendNotificationToAdmin(String userEmail) {
+        NotificationResponse noti = NotificationResponse.builder()
+                .message("New request created by: " + userEmail)
+                .time(LocalDateTime.now())
+                .build();
+
+        // Tất cả admin đang subscribe /topic/admin sẽ nhận được
+        simpMessagingTemplate.convertAndSend("/topic/admin", noti);
+    }
 
     @Override
     public Request createRequest(CreateSuggestionRequest request) {
@@ -47,6 +62,8 @@ public class RequestServiceImpl implements IRequestService {
         message.setSubject(request.getTitle());
         message.setText(request.getContent());
         mailSender.send(message);
+
+        sendNotificationToAdmin(user.getEmail());
 
         return requestRepository.save(newRequest);
     }
