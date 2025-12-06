@@ -3,6 +3,7 @@ package com.ryo.identity.service.impl;
 import com.ryo.identity.dto.request.CreatePrescriptionRequest;
 import com.ryo.identity.dto.request.IntakeItemRequest;
 import com.ryo.identity.dto.request.IntakeRequest;
+import com.ryo.identity.dto.response.PrescriptionInfo;
 import com.ryo.identity.entity.*;
 import com.ryo.identity.exception.AppException;
 import com.ryo.identity.exception.ErrorCode;
@@ -18,8 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     private final PrescriptionRepository prescriptionRepository;
     private final UserRepository userRepository;
     private final DrugRepository drugRepository;
+    private final DrugInteractionServiceImpl drugInteractionService;
 
     @Override
     @PreAuthorize("hasRole('MED')")
@@ -97,6 +99,8 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                 .description(original.getDescription())
                 .startDate(LocalDate.from(LocalDateTime.now()))
                 .endDate(original.getEndDate())
+                .info(original.getInfo())
+                .drugInteractionResponseList(original.getDrugInteractionResponseList())
                 .user(user)
                 .build();
 
@@ -140,6 +144,42 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     public Page<Prescription> searchByDate(Integer userId, LocalDate start, LocalDate end, Pageable pageable) {
         return prescriptionRepository
                 .findByUserIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, start, end, pageable);
+    }
+
+    @Override
+    public PrescriptionInfo getPrescriptionReview(List<Integer> listDrug) {
+        List<Map<String,Map<String, Object>>> info = new ArrayList<>();
+        List<Map<String, String>> drugInteractionResponseList = new ArrayList<>();
+        Set<String> list_ingredient = new HashSet<>();
+        for (Integer drugId : listDrug) {
+            Drug drug = drugRepository.findById(drugId)
+                    .orElseThrow(() -> new AppException(ErrorCode.DRUG_NOT_EXIST));
+            Map<String, Object> innerMap = drug.getInfo();
+            Map<String, Map<String, Object>> outerMap = new HashMap<>();
+            outerMap.put(drug.getName(), innerMap);
+            info.add(outerMap);
+
+            Set<String> ingredientIds = drug.getMergedIngredients().stream()
+                    .map(MergedIngredient::getName)
+                    .collect(Collectors.toSet());
+            List<DrugInteraction> interactionList =
+                    drugInteractionService.getByListIngredientName(ingredientIds.stream().toList());
+
+            for(DrugInteraction interaction: interactionList){
+                Map<String, String> drugInteraction = new HashMap<>();
+                drugInteraction.put("mucDoNghiemTrong", interaction.getMucDoNghiemTrong());
+                drugInteraction.put("hauQuaCuaTuongTac", interaction.getHauQuaCuaTuongTac());
+                drugInteraction.put("coCheTuongTac", interaction.getCoCheTuongTac());
+                drugInteraction.put("xuTriTuongTac", interaction.getXuTriTuongTac());
+                drugInteractionResponseList.add(drugInteraction);
+            }
+
+        }
+        return PrescriptionInfo.builder()
+                .info(info)
+                .drugInteractionResponseList(drugInteractionResponseList)
+                .build();
+
     }
 
 

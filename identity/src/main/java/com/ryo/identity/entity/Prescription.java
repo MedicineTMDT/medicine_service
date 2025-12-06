@@ -5,10 +5,13 @@ import com.ryo.identity.dto.response.DrugResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -38,4 +41,12 @@ public class Prescription {
     // do sth here about prescription info :vvvx
 //    private List<DrugResponse> infoList;
 //    private List<DrugInteractionResponse> drugInteractionResponseList;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "json")
+    private List<Map<String, String>> info;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "json")
+    private List<Map<String, String>> drugInteractionResponseList;
 }

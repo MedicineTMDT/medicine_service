@@ -7,6 +7,7 @@ import com.ryo.identity.entity.Category;
 import com.ryo.identity.entity.Drug;
 import com.ryo.identity.exception.AppException;
 import com.ryo.identity.exception.ErrorCode;
+import com.ryo.identity.projection.DrugProjection;
 import com.ryo.identity.repository.CategoryRepository;
 import com.ryo.identity.repository.DrugRepository;
 import com.ryo.identity.service.IDrugService;
@@ -36,16 +37,19 @@ public class DrugServiceImpl implements IDrugService {
                 .build();
     }
 
-    private DrugSimpleResponse toSimple(Drug drug) {
+    private DrugSimpleResponse toSimple(DrugProjection p) {
         return DrugSimpleResponse.builder()
-                .id(drug.getId())
-                .name(drug.getName())
-                .slug(drug.getSlug())
-                .imageLink(drug.getImage() != null && !drug.getImage().isEmpty()
-                        ? drug.getImage().getFirst()
-                        : null)
+                .id(p.getId())
+                .name(p.getName())
+                .slug(p.getSlug())
+                .imageLink(
+                        p.getImage() != null && !p.getImage().isEmpty()
+                                ? p.getImage().getFirst()
+                                : null
+                )
                 .build();
     }
+
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
@@ -113,7 +117,7 @@ public class DrugServiceImpl implements IDrugService {
 
     @Override
     public Page<DrugSimpleResponse> getAll(Pageable pageable) {
-        return drugRepository.findAll(pageable).map(this::toSimple);
+        return drugRepository.getAllProjectedBy(pageable).map(this::toSimple);
     }
 
     @Override
@@ -134,5 +138,13 @@ public class DrugServiceImpl implements IDrugService {
                 () -> new AppException(ErrorCode.DRUG_NOT_EXIST)
         );
         return drug.getImage();
+    }
+
+    @Override
+    public List<DrugSimpleResponse> getTop10ByNameStartingWithIgnoreCase(String name) {
+        return drugRepository.findTop10ByNameStartingWithIgnoreCase(name)
+                .stream()
+                .map(this::toSimple)
+                .toList();
     }
 }

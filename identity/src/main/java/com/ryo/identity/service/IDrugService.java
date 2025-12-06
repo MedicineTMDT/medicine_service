@@ -20,6 +20,7 @@ public interface IDrugService {
     Page<DrugSimpleResponse> getAllByDrugName(Pageable pageable, String name);
 
     List<String> getDrugIngredients(Integer drugId);
+    List<DrugSimpleResponse> getTop10ByNameStartingWithIgnoreCase(String name);
 
 
 

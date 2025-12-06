@@ -1,6 +1,7 @@
 package com.ryo.identity.repository;
 
 import com.ryo.identity.entity.Drug;
+import com.ryo.identity.projection.DrugProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,8 +18,12 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
 
     Optional<Drug> findByName(String slug);
 
-    Page<Drug> findAllByCategories_Id(Pageable pageable, Integer categoryId);
+    Page<DrugProjection> getAllProjectedBy(Pageable pageable);
 
-    Page<Drug> findAllByNameContainingIgnoreCase(Pageable pageable, String name);
+    Page<DrugProjection> findAllByCategories_Id(Pageable pageable, Integer categoryId);
+
+    Page<DrugProjection> findAllByNameContainingIgnoreCase(Pageable pageable, String name);
+
+    List<DrugProjection> findTop10ByNameStartingWithIgnoreCase(String name);
 
 }
