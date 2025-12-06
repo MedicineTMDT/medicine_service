@@ -9,5 +9,6 @@ import org.springframework.data.domain.Pageable;
 public interface IRequestService {
     Request createRequest(CreateSuggestionRequest request);
     Page<Request> getAllRequest(Pageable pageable);
-    Page<Request> getAllRequest(Pageable pageable, TypeOfRequest typeOfRequest);
+    Page<Request> getAllRequestByTypeOfReques(Pageable pageable, TypeOfRequest typeOfRequest);
+    Page<Request> getAllRequestByUserId(Pageable pageable, String userId);
 }

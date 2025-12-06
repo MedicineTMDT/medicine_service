@@ -48,3 +48,8 @@ admin:
 
 frontend:
   url: ${FE_URL}
+
+cloudinary:
+  name: ${CLOUDINARY_CLOUD_NAME}
+  apiKey: ${CLOUDINARY_API_KEY}
+  password: ${CLOUDINARY_API_SECRET}

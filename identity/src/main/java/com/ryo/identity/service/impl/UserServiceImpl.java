@@ -1,5 +1,7 @@
 package com.ryo.identity.service.impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.ryo.identity.dto.request.EditUserRequest;
 import com.ryo.identity.dto.response.UserResponse;
 import com.ryo.identity.entity.User;
@@ -20,6 +22,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Map;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -30,6 +36,7 @@ public class UserServiceImpl {
     UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+    Cloudinary cloudinary;
 
     @NonFinal
     @Value("${spring.mail.username}")
@@ -96,6 +103,21 @@ public class UserServiceImpl {
         mailSender.send(message);
 
         user.setForgotPasswordToken(otp);
+        userRepository.save(user);
+    }
+
+    public void updateAvatarImg(MultipartFile file) throws IOException {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+        Map uploadResult = cloudinary.uploader().upload(
+                file.getBytes(),
+                ObjectUtils.asMap(
+                        "resource_type", "auto"
+                )
+        );
+        user.setAvatarImg(uploadResult.get("secure_url").toString());
         userRepository.save(user);
     }
 }

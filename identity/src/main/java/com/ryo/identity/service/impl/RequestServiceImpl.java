@@ -57,7 +57,12 @@ public class RequestServiceImpl implements IRequestService {
     }
 
     @Override
-    public Page<Request> getAllRequest(Pageable pageable, TypeOfRequest typeOfRequest) {
+    public Page<Request> getAllRequestByTypeOfReques(Pageable pageable, TypeOfRequest typeOfRequest) {
         return requestRepository.findByTypeOfRequest(typeOfRequest, pageable);
+    }
+
+    @Override
+    public Page<Request> getAllRequestByUserId(Pageable pageable, String userId) {
+        return requestRepository.findByUserId(userId, pageable);
     }
 }
