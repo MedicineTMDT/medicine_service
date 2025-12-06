@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,11 +18,12 @@ public class Intake {
     private String id;
 
     private LocalDateTime time;
-    private String drugName;
-    private Integer quantity;
     private String status;
 
     @ManyToOne
     @JoinColumn(name = "prescription_id")
     private Prescription prescription;
+
+    @OneToMany(mappedBy = "intake", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IntakeItem> items;
 }

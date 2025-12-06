@@ -1,5 +1,7 @@
 package com.ryo.identity.entity;
 
+import com.ryo.identity.dto.response.DrugInteractionResponse;
+import com.ryo.identity.dto.response.DrugResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -34,5 +36,6 @@ public class Prescription {
     private List<Intake> intakes = new ArrayList<>();
 
     // do sth here about prescription info :vvvx
-
+//    private List<DrugResponse> infoList;
+//    private List<DrugInteractionResponse> drugInteractionResponseList;
 }

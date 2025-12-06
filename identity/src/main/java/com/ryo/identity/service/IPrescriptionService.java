@@ -1,0 +1,16 @@
+package com.ryo.identity.service;
+
+import com.ryo.identity.dto.request.CreatePrescriptionRequest;
+import com.ryo.identity.entity.Prescription;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDate;
+
+public interface IPrescriptionService {
+    Prescription createPrescription(CreatePrescriptionRequest request, String userId);
+    Prescription createPrescription(Prescription prescription);
+    Prescription copyPrescription(String prescriptionId, String userId);
+    Page<Prescription> searchByName(Integer userId, String name, Pageable pageable);
+    Page<Prescription> searchByDate(Integer userId, LocalDate start, LocalDate end, Pageable pageable);
+}

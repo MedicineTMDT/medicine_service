@@ -3,12 +3,13 @@ package com.ryo.identity.repository;
 import com.ryo.identity.entity.DrugInteraction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface DrugInteractionRepository extends JpaRepository<DrugInteraction, Integer> {
-    List<DrugInteraction> findByHoatChat1Name(String name);
-    List<DrugInteraction> findByHoatChat2Name(String name);
+    @Query("SELECT d FROM DrugInteraction d WHERE d.hoatChat1Name = :name OR d.hoatChat2Name = :name")
+    List<DrugInteraction> findAnyInteraction(@Param("name") String name);
     @Query("""
         SELECT d FROM DrugInteraction d\s
         WHERE\s

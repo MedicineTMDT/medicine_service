@@ -25,6 +25,7 @@ public enum ErrorCode {
     DRUG_NOT_EXIST(1016, "Drug not found", HttpStatus.BAD_REQUEST),
     INGREDIENT_NOT_EXIST(1017, "Ingredient not found", HttpStatus.BAD_REQUEST),
     DRUG_INTERACTION_NOT_FOUND(1018, "Drug Interaction not found", HttpStatus.BAD_REQUEST),
+    PRESCRIPTION_NOT_FOUND(1019, "Prescription not found", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

@@ -17,7 +17,7 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
 
     Optional<Drug> findByName(String slug);
 
-    Page<Drug> findAllByCategoryId(Pageable pageable, Integer categoryId);
+    Page<Drug> findAllByCategories_Id(Pageable pageable, Integer categoryId);
 
     Page<Drug> findAllByNameContainingIgnoreCase(Pageable pageable, String name);
 

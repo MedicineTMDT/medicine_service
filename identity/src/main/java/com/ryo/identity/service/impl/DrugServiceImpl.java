@@ -118,7 +118,7 @@ public class DrugServiceImpl implements IDrugService {
 
     @Override
     public Page<DrugSimpleResponse> getAllByCategoryId(Pageable pageable, Integer id) {
-        return drugRepository.findAllByCategoryId(pageable, id)
+        return drugRepository.findAllByCategories_Id(pageable, id)
                 .map(this::toSimple);
     }
 

@@ -87,13 +87,7 @@ public class DrugInteractionServiceImpl implements IDrugInteractionService {
     }
 
     private List<DrugInteraction> getByOneIngreientName(String name) {
-        List<DrugInteraction> first = drugInteractionRepository.findByHoatChat1Name(name);
-        List<DrugInteraction> second = drugInteractionRepository.findByHoatChat2Name(name);
-
-        List<DrugInteraction> result = new ArrayList<>(first);
-        result.addAll(second);
-
-        return result;
+        return drugInteractionRepository.findAnyInteraction(name);
     }
 
 
