@@ -1,0 +1,1277 @@
+{
+	"info": {
+		"_postman_id": "20cc5da1-ad6c-440c-a949-18709cf81fa5",
+		"name": "Medicine",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40738443"
+	},
+	"item": [
+		{
+			"name": "api/v1/auth/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"tunglk\",\r\n    \"password\": \"Tunglk0911.\",\r\n    \"firstName\": \"Tung\",\r\n    \"lastName\": \"BuiThanh\",\r\n    \"email\": \"thanhtunglk0911@gmail.com\",\r\n    \"role\": \"USER\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/auth/verify-email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/verify-email?email=thanhtunglk0911@gmail.com&token=578949",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"verify-email"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "thanhtunglk0911@gmail.com"
+						},
+						{
+							"key": "token",
+							"value": "578949"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/auth/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"password\": \"ADMIN\",\r\n    \"email\": \"admin@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/auth/verify-forgot-password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/verify-forgot-password?email=thanhtunglk0911@gmail.com&token=890776",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"verify-forgot-password"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "thanhtunglk0911@gmail.com"
+						},
+						{
+							"key": "token",
+							"value": "890776"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/auth/logout",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoidHVuZ2xrIiwiZXhwIjoxNzY1MTg0OTU5LCJpYXQiOjE3NjUxODEzNTksImp0aSI6IjgwMWZiY2E4LTgxMTktNGMxMS05OTczLWQ4MjAxMTNmNzM1ZiIsInNjb3BlIjoiVVNFUiJ9.oWhDcDerk80z7Tp2qAJMKNEnH4101yQkC4XIlX2nU-mLkgyIEIDl2l0hJb0EMlkuxSvtlDtutv18_nWjvpZnCA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/users/forgot-password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/forgot-password?email=thanhtunglk0911@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"forgot-password"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "thanhtunglk0911@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/users/update-avatar-img",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoidHVuZ2xrIiwiZXhwIjoxNzY1MTg2MDE2LCJpYXQiOjE3NjUxODI0MTYsImp0aSI6IjkyNWIxOGM5LTQxMzAtNGI0Mi1iODExLTBmNWQwOWZhYzIzOCIsInNjb3BlIjoiVVNFUiJ9.dGdgul2gxm0V6KzJGdfNDbjmmuoWrc8mvMthSXbWgg7wbA8vl7zmVQobJsSUefvGZqBzTBFY6SlMTOfTMoAgig",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/THANH TUNG/Pictures/Saved Pictures/440958811_987933926087106_8457872568944682768_n.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/update-avatar-img",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"update-avatar-img"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/users/edit",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoidHVuZ2xrMDkxIiwiZXhwIjoxNzY1MTkyMzg3LCJpYXQiOjE3NjUxODg3ODcsImp0aSI6IjRjZDYwMTI1LWI2MmItNDY0YS1iYTBkLTQ3YTAwOTQ3OTU2MiIsInNjb3BlIjoiVVNFUiJ9.uO6_lych-bd0dTyaGFUYttetyRL8XdczwbTzkXDm66wPBnrI9kxrZ3TEfwT46mIJKLvHVi1QehQvKeN0t42Alw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": \"c72d6307-b690-4f7c-9595-3a4f25187a0c\",\r\n  \"username\": \"tunglk0912\",\r\n  \"firstName\": \"Tung\",\r\n  \"lastName\": \"Bui Thanh\",\r\n  \"avatarImg\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/edit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/users/change-password",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoidHVuZ2xrMDkxMiIsImV4cCI6MTc2NTE5MzA2NywiaWF0IjoxNzY1MTg5NDY3LCJqdGkiOiI2ZDA5NjBmYy00NDI3LTQxYzAtODdhZS05NWQ5NDgxNGY1ZWYiLCJzY29wZSI6IlVTRVIifQ.2zdkVz0bMty_PvQN96aF_F9_j52WjbvNSVfJ-weDNd6QPhTmtwIaeRA8X77eoUXs6LTO1dONyUNOhhU1JEC9CQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"newPassword\": \"string\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/change-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"change-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/users/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoidHVuZ2xrMDkxMiIsImV4cCI6MTc2NTIwMjg4NywiaWF0IjoxNzY1MTk5Mjg3LCJqdGkiOiI2Y2I5YjJiMy1jZmNmLTQ0ODYtYjAyMC01MTcyZDI2MGQ2MzciLCJzY29wZSI6IlVTRVIifQ.yh5Okm0YN9d_f2lzrYFKLEY92-DR507ZPeCqH6PSfNZpzxShAN-4vaoI-wFTR0ngHn9lAUK4Ffgf2jElmEhcLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/c72d6307-b690-4f7c-9595-3a4f25187a0c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"c72d6307-b690-4f7c-9595-3a4f25187a0c"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "c72d6307-b690-4f7c-9595-3a4f25187a0c",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/categories/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoidHVuZ2xrMDkxMiIsImV4cCI6MTc2NTIwMjg4NywiaWF0IjoxNzY1MTk5Mjg3LCJqdGkiOiI2Y2I5YjJiMy1jZmNmLTQ0ODYtYjAyMC01MTcyZDI2MGQ2MzciLCJzY29wZSI6IlVTRVIifQ.yh5Okm0YN9d_f2lzrYFKLEY92-DR507ZPeCqH6PSfNZpzxShAN-4vaoI-wFTR0ngHn9lAUK4Ffgf2jElmEhcLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/categories/147",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"categories",
+						"147"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "c72d6307-b690-4f7c-9595-3a4f25187a0c",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/categories/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDM1MDQsImlhdCI6MTc2NTE5OTkwNCwianRpIjoiOGI1ZDlhOTYtZjE2NC00NDAzLWI0NDYtYTAzMmE4OWNjNGQzIiwic2NvcGUiOiJBRE1JTiJ9.wMLKKSbxJBTvA5wct-i7__EJdGdwTqcViA1xI7Au1k0V7XMdNfFkcmfl3qEWDH0zrNBgPdkvV5-gC2hxhOG1TA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Thuốc khác\",\r\n  \"slug\": \"thuoc-khac\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/categories/147",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"categories",
+						"147"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "c72d6307-b690-4f7c-9595-3a4f25187a0c",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/categories",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoidHVuZ2xrMDkxMiIsImV4cCI6MTc2NTIwMjg4NywiaWF0IjoxNzY1MTk5Mjg3LCJqdGkiOiI2Y2I5YjJiMy1jZmNmLTQ0ODYtYjAyMC01MTcyZDI2MGQ2MzciLCJzY29wZSI6IlVTRVIifQ.yh5Okm0YN9d_f2lzrYFKLEY92-DR507ZPeCqH6PSfNZpzxShAN-4vaoI-wFTR0ngHn9lAUK4Ffgf2jElmEhcLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/categories?page=1&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"categories"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "id",
+							"value": "c72d6307-b690-4f7c-9595-3a4f25187a0c",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/categories",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDM1MDQsImlhdCI6MTc2NTE5OTkwNCwianRpIjoiOGI1ZDlhOTYtZjE2NC00NDAzLWI0NDYtYTAzMmE4OWNjNGQzIiwic2NvcGUiOiJBRE1JTiJ9.wMLKKSbxJBTvA5wct-i7__EJdGdwTqcViA1xI7Au1k0V7XMdNfFkcmfl3qEWDH0zrNBgPdkvV5-gC2hxhOG1TA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"string\",\r\n  \"slug\": \"string\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"categories"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "10",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "c72d6307-b690-4f7c-9595-3a4f25187a0c",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/categories/search",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoidHVuZ2xrMDkxMiIsImV4cCI6MTc2NTIwMjg4NywiaWF0IjoxNzY1MTk5Mjg3LCJqdGkiOiI2Y2I5YjJiMy1jZmNmLTQ0ODYtYjAyMC01MTcyZDI2MGQ2MzciLCJzY29wZSI6IlVTRVIifQ.yh5Okm0YN9d_f2lzrYFKLEY92-DR507ZPeCqH6PSfNZpzxShAN-4vaoI-wFTR0ngHn9lAUK4Ffgf2jElmEhcLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/categories/search?page=0&size=10&name=Thuốc Hô Hấp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"categories",
+						"search"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "name",
+							"value": "Thuốc Hô Hấp"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/drugs/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDM1MDQsImlhdCI6MTc2NTE5OTkwNCwianRpIjoiOGI1ZDlhOTYtZjE2NC00NDAzLWI0NDYtYTAzMmE4OWNjNGQzIiwic2NvcGUiOiJBRE1JTiJ9.wMLKKSbxJBTvA5wct-i7__EJdGdwTqcViA1xI7Au1k0V7XMdNfFkcmfl3qEWDH0zrNBgPdkvV5-gC2hxhOG1TA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/drugs/2901",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"drugs",
+						"2901"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "c72d6307-b690-4f7c-9595-3a4f25187a0c",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/drugs",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDM1MDQsImlhdCI6MTc2NTE5OTkwNCwianRpIjoiOGI1ZDlhOTYtZjE2NC00NDAzLWI0NDYtYTAzMmE4OWNjNGQzIiwic2NvcGUiOiJBRE1JTiJ9.wMLKKSbxJBTvA5wct-i7__EJdGdwTqcViA1xI7Au1k0V7XMdNfFkcmfl3qEWDH0zrNBgPdkvV5-gC2hxhOG1TA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/drugs?page=1&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"drugs"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "id",
+							"value": "c72d6307-b690-4f7c-9595-3a4f25187a0c",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/drugs/{id}/ingredients",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/drugs/2901/ingredients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"drugs",
+						"2901",
+						"ingredients"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "c72d6307-b690-4f7c-9595-3a4f25187a0c",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/drugs/top10",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/drugs/top10?name=MedS",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"drugs",
+						"top10"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "MedS"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/drugs/search",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/drugs/search?page=1&size=10&name=phar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"drugs",
+						"search"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "name",
+							"value": "phar"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/drugs/by-category/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/drugs/by-category/148?page=1&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"drugs",
+						"by-category",
+						"148"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/drug-interactions/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/drug-interactions/67",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"drug-interactions",
+						"67"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/drug-interactions/search-by-ingredients",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    \"Telbivudin\",\"Peginterferon-alpha 2b\",\"Peginterferon-alpha 2a\"\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/drug-interactions/search-by-ingredients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"drug-interactions",
+						"search-by-ingredients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/category-detail/{id}",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    \"Telbivudin\",\"Peginterferon-alpha 2b\",\"Peginterferon-alpha 2a\"\r\n]"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/category-detail/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"category-detail",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/category-detail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/category-detail?page=0&size=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"category-detail"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/category-detail/search",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/category-detail/search?page=0&size=5&name=thuốc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"category-detail",
+						"search"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						},
+						{
+							"key": "name",
+							"value": "thuốc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/category-detail/by-category/{id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/category-detail/by-category/148?page=0&size=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"category-detail",
+						"by-category",
+						"148"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/requests",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMDk5NTAsImlhdCI6MTc2NTIwNjM1MCwianRpIjoiNmMyYjhmNzktMjIwYi00MzExLWJiMWYtYWQxODc5ZTdhYWZhIiwic2NvcGUiOiJBRE1JTiJ9.vbeUMYt-O-lWy6rtbNCnSusBWxBx_gv_roeLVD5oqBee3xI-ecaGlqs21I36GY11egl3vQQ40cdj8nYa9KL-SA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"string\",\r\n  \"content\": \"string\",\r\n  \"typeOfRequest\": \"ADD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/requests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/requests",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMTM2MzQsImlhdCI6MTc2NTIxMDAzNCwianRpIjoiOTFlZmI1YTItMzkxMi00YzM2LWJhYzctYTI4ZTMwM2Q0ZWU0Iiwic2NvcGUiOiJBRE1JTiJ9.YY45yX-H-k3oe5sYIvpWYlsRKxao_utSZnysWObbhZmzegJai9w94Io96XKDgjwjXApcfY_cQ8nHQTBl7M8QXQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"string\",\r\n  \"content\": \"string\",\r\n  \"typeOfRequest\": \"ADD\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/requests?page=0&size=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"requests"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/requests/user/{id}",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMTM2MzQsImlhdCI6MTc2NTIxMDAzNCwianRpIjoiOTFlZmI1YTItMzkxMi00YzM2LWJhYzctYTI4ZTMwM2Q0ZWU0Iiwic2NvcGUiOiJBRE1JTiJ9.YY45yX-H-k3oe5sYIvpWYlsRKxao_utSZnysWObbhZmzegJai9w94Io96XKDgjwjXApcfY_cQ8nHQTBl7M8QXQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"string\",\r\n  \"content\": \"string\",\r\n  \"typeOfRequest\": \"ADD\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/requests/user/cae1bd0b-231d-43ef-b2a8-0284c520c991?page=0&size=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"requests",
+						"user",
+						"cae1bd0b-231d-43ef-b2a8-0284c520c991"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/requests/type",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtZWQuY29tIiwic3ViIjoiQURNSU4iLCJleHAiOjE3NjUyMTM2MzQsImlhdCI6MTc2NTIxMDAzNCwianRpIjoiOTFlZmI1YTItMzkxMi00YzM2LWJhYzctYTI4ZTMwM2Q0ZWU0Iiwic2NvcGUiOiJBRE1JTiJ9.YY45yX-H-k3oe5sYIvpWYlsRKxao_utSZnysWObbhZmzegJai9w94Io96XKDgjwjXApcfY_cQ8nHQTBl7M8QXQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"string\",\r\n  \"content\": \"string\",\r\n  \"typeOfRequest\": \"ADD\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/requests/type?type=ADD",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"requests",
+						"type"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "ADD"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
