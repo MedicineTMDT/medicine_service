@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IMergedIngredientService {
-    List<MergedIngredient> suggest(String name);
+    List<MergedIngredientResponse> suggest(String name);
 }

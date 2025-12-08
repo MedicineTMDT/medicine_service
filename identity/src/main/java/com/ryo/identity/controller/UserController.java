@@ -10,6 +10,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -53,4 +56,11 @@ public class UserController {
                 .build();
     }
 
+    @PutMapping("/update-avatar-img")
+    public ApiResponse<String> updateAvatarImg(@RequestParam("file") MultipartFile file) {
+        String imageUrl = userService.updateAvatarImg(file);
+        return ApiResponse.<String>builder()
+                .result(imageUrl)
+                .build();
+    }
 }

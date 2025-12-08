@@ -17,7 +17,13 @@ public class MergedIngredientServiceImpl implements IMergedIngredientService {
     private final MergedIngredientRepository mergedIngredientRepository;
 
     @Override
-    public List<MergedIngredient> suggest(String name) {
-        return mergedIngredientRepository.findTop10ByNameStartingWithIgnoreCase(name);
+    public List<MergedIngredientResponse> suggest(String name) {
+        return mergedIngredientRepository.findTop10ByNameStartingWithIgnoreCase(name)
+                .stream().map(
+                    item -> MergedIngredientResponse.builder()
+                            .id(item.getId())
+                            .name(item.getName())
+                            .build()
+                ).toList();
     }
 }

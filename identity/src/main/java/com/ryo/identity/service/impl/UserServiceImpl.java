@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -30,6 +31,7 @@ import java.util.Map;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl {
 
     JavaMailSender mailSender;
@@ -106,18 +108,42 @@ public class UserServiceImpl {
         userRepository.save(user);
     }
 
-    public void updateAvatarImg(MultipartFile file) throws IOException {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
-        );
-        Map uploadResult = cloudinary.uploader().upload(
-                file.getBytes(),
-                ObjectUtils.asMap(
-                        "resource_type", "auto"
-                )
-        );
-        user.setAvatarImg(uploadResult.get("secure_url").toString());
-        userRepository.save(user);
+    public String updateAvatarImg(MultipartFile file) {
+        try {
+            // Lấy email từ SecurityContext
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+            // Upload ảnh lên Cloudinary
+            Map uploadResult = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap("resource_type", "auto")
+            );
+
+            // Lấy URL ảnh
+            String url = uploadResult.get("secure_url").toString();
+            user.setAvatarImg(url);
+
+            userRepository.save(user);
+            return url;
+
+        } catch (IOException e) {
+            // Lỗi đọc file hoặc upload ảnh
+            log.error("Upload avatar failed (IO Exception): {}", e.getMessage());
+            throw new AppException(ErrorCode.UPLOAD_FILE_FAILED);
+
+        } catch (AppException e) {
+            // Các lỗi đã được định nghĩa trong hệ thống
+            log.error("AppException: {}", e.getMessage());
+            throw e;
+
+        } catch (Exception e) {
+            // Lỗi không mong muốn (Cloudinary, NullPointer, ...)
+            log.error("Unexpected error while updating avatar: {}", e.getMessage());
+            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+        }
     }
+
 }
