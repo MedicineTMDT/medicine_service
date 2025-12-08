@@ -1,7 +1,7 @@
 package com.ryo.identity.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ryo.identity.dto.response.ApiResponse;
+import com.ryo.identity.dto.response.APIResponse;
 import com.ryo.identity.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,10 +19,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             throws IOException, ServletException {
         ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
 
-        response.setStatus(errorCode.getStatusCode().value());
+        response.setStatus(errorCode.getHttpStatusCode().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        ApiResponse<?> apiResponse = ApiResponse.builder()
+        APIResponse<?> apiResponse = APIResponse.builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .build();

@@ -8,20 +8,23 @@ import com.ryo.identity.exception.ErrorCode;
 import com.ryo.identity.repository.CategoryRepository;
 import com.ryo.identity.service.ICategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 
-@Service
+@Service @Slf4j
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements ICategoryService {
 
     private final CategoryRepository categoryRepository;
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CategoryResponse create(CategoryRequest request) {
 
         if (categoryRepository.existsBySlug(request.getSlug())) {
@@ -40,9 +43,12 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CategoryResponse update(Integer id, CategoryRequest request) {
-
+        log.info("begin update");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("User Name: " + authentication.getName());
+        log.info("User Authorities (Roles): " + authentication.getAuthorities());
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
@@ -60,7 +66,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void delete(Integer id) {
 
         Category category = categoryRepository.findById(id)

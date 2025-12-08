@@ -29,7 +29,7 @@ public class DrugInteractionServiceImpl implements IDrugInteractionService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DrugInteraction create(DrugInteractionRequest req) {
 
         MergedIngredient ing1 = getIngredient(req.getIngredient1Id());
@@ -50,7 +50,7 @@ public class DrugInteractionServiceImpl implements IDrugInteractionService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DrugInteraction update(DrugInteractionRequest req, Integer id) {
 
         DrugInteraction interaction = drugInteractionRepository.findById(id)
@@ -75,7 +75,7 @@ public class DrugInteractionServiceImpl implements IDrugInteractionService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void delete(Integer id) {
         drugInteractionRepository.deleteById(id);
     }

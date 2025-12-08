@@ -3,6 +3,7 @@ package com.ryo.identity.configuration;
 import com.nimbusds.jose.JOSEException;
 import com.ryo.identity.dto.request.IntrospectRequest;
 import com.ryo.identity.service.impl.AuthenticationServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -17,6 +18,7 @@ import java.text.ParseException;
 import java.util.Objects;
 
 @Component
+@Slf4j
 public class CustomJwtDecoder implements JwtDecoder {
     @Value("${jwt.signerKey}")
     private String signerKey;
@@ -28,11 +30,9 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
-
         try {
             var response = authenticationService.introspect(
                     IntrospectRequest.builder().token(token).build());
-
             if (!response.isValid()) throw new JwtException("Invalid token");
         } catch (JOSEException | ParseException e) {
             throw new JwtException(e.getMessage());
@@ -44,7 +44,7 @@ public class CustomJwtDecoder implements JwtDecoder {
                     .macAlgorithm(MacAlgorithm.HS512)
                     .build();
         }
-
+        log.info("Passed customJWTDecoder");
         return nimbusJwtDecoder.decode(token);
     }
 }

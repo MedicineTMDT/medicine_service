@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,15 +41,17 @@ public class UserServiceImpl {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     Cloudinary cloudinary;
+    EmailService emailService;
 
     @NonFinal
     @Value("${spring.mail.username}")
     protected String emailAddress;
 
-    @PreAuthorize("request.username == authentication.name")
-    public UserResponse editUserInfo(@Valid @RequestBody EditUserRequest request){
-
-        User user = userRepository.findById(request.getUserId())
+    public UserResponse editUserInfo(EditUserRequest request){
+        log.info("BEGIN_EDIT_USER_INFO");
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Current Username: " + currentUsername);
+        User user = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         // Check username unique
@@ -59,30 +63,29 @@ public class UserServiceImpl {
         // Update fields
         userMapper.editUserRequest(user, request);
         userRepository.save(user);
+        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
 
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                user.getUsername(),        // principal mới
+                currentAuth.getCredentials(),
+                currentAuth.getAuthorities()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+        // Test
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("userName: " + username);
         return userMapper.user2UserResponse(user);
     }
 
-    @PreAuthorize("request.username == authentication.name")
     public void changeUserPassword(String newPassword){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user  = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("username: " + username);
+        User user  = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(emailAddress);
-        message.setTo(user.getEmail());
-        message.setSubject("Mật khẩu của bạn đã được thay đổi");
-        message.setText(
-                "Xin chào " + user.getFirstName() + ",\n\n" +
-                        "Mật khẩu tài khoản của bạn vừa được thay đổi thành công.\n" +
-                        "Nếu bạn không thực hiện hành động này, vui lòng liên hệ ngay với bộ phận hỗ trợ.\n\n" +
-                        "Trân trọng,\n" +
-                        "Đội ngũ hỗ trợ"
-        );
-
-        mailSender.send(message);
+        emailService.sendPasswordChangeEmail(user);
     }
 
     public UserResponse getUserById(String userId) {
@@ -96,13 +99,7 @@ public class UserServiceImpl {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         String otp = String.valueOf((int) ((Math.random() * 900000) + 100000));
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(emailAddress);
-        message.setTo(email);
-        message.setSubject("Mã xác thực OTP");
-        message.setText("Mã OTP của bạn là: " + otp + "\nMã có hiệu lực trong 5 phút.");
-
-        mailSender.send(message);
+        emailService.sendOtp(user,otp);
 
         user.setForgotPasswordToken(otp);
         userRepository.save(user);
@@ -111,17 +108,14 @@ public class UserServiceImpl {
     public String updateAvatarImg(MultipartFile file) {
         try {
             // Lấy email từ SecurityContext
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-            User user = userRepository.findByEmail(email)
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
             // Upload ảnh lên Cloudinary
             Map uploadResult = cloudinary.uploader().upload(
                     file.getBytes(),
                     ObjectUtils.asMap("resource_type", "auto")
             );
-
             // Lấy URL ảnh
             String url = uploadResult.get("secure_url").toString();
             user.setAvatarImg(url);

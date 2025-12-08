@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LogoutRequest {
-    @NotBlank
+    @NotBlank(message = "NOT_BLANK")
     String token;
 }

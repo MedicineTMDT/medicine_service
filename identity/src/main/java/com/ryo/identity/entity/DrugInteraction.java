@@ -38,10 +38,12 @@ public class DrugInteraction {
     // Khóa ngoại tới MergedIngredient (Hoạt chất 1)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hoat_chat_1_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private MergedIngredient ingredient1;
 
     // Khóa ngoại tới MergedIngredient (Hoạt chất 2)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hoat_chat_2_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private MergedIngredient ingredient2;
 }

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.text.ParseException;
 
 public interface IAuthenticationService {
-    UserResponse createUser(@Valid @RequestBody CreateUserRequest request);
-    AuthenticationResponse authenticate(@Valid @RequestBody LoginRequest request);
+    UserResponse createUser(CreateUserRequest request);
+    AuthenticationResponse authenticate(LoginRequest request);
     void logout(LogoutRequest request) throws ParseException, JOSEException;
-    IntrospectResponse introspect(@RequestBody IntrospectRequest request)
+    IntrospectResponse introspect(IntrospectRequest request)
             throws JOSEException, ParseException;
 }

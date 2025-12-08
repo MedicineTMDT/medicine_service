@@ -46,7 +46,7 @@ public class CategoryDetailServiceImpl implements ICategoryDetailService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CategoryDetailResponse create(CategoryDetailRequest req) {
 
         Category category = getCategory(req.getCategoryId());
@@ -61,7 +61,7 @@ public class CategoryDetailServiceImpl implements ICategoryDetailService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CategoryDetailResponse update(Integer id, CategoryDetailRequest req) {
 
         CategoryDetail detail = categoryDetailRepository.findById(id)
@@ -77,7 +77,7 @@ public class CategoryDetailServiceImpl implements ICategoryDetailService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void delete(Integer id) {
         if (!categoryDetailRepository.existsById(id))
             throw new RuntimeException("CategoryDetail not found: " + id);

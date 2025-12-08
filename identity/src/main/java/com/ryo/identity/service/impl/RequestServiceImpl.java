@@ -29,6 +29,7 @@ public class RequestServiceImpl implements IRequestService {
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final EmailService emailService;
 
     private void sendNotificationToAdmin(String userEmail) {
         NotificationResponse noti = NotificationResponse.builder()
@@ -43,8 +44,8 @@ public class RequestServiceImpl implements IRequestService {
     @Override
     public Request createRequest(CreateSuggestionRequest request) {
         // Lấy user hiện tại
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
 
@@ -55,13 +56,8 @@ public class RequestServiceImpl implements IRequestService {
                 .proceed(false)
                 .user(user)
                 .build();
+        emailService.getRequest(user,request.getTitle(), request.getContent());
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(user.getEmail());
-        message.setTo("admin@gmail.com");
-        message.setSubject(request.getTitle());
-        message.setText(request.getContent());
-        mailSender.send(message);
 
         sendNotificationToAdmin(user.getEmail());
 

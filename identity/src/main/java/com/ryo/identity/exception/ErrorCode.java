@@ -26,16 +26,19 @@ public enum ErrorCode {
     INGREDIENT_NOT_EXIST(1017, "Ingredient not found", HttpStatus.BAD_REQUEST),
     DRUG_INTERACTION_NOT_FOUND(1018, "Drug Interaction not found", HttpStatus.BAD_REQUEST),
     PRESCRIPTION_NOT_FOUND(1019, "Prescription not found", HttpStatus.BAD_REQUEST),
-    UPLOAD_FILE_FAILED(1020, "Upload file failed", HttpStatus.BAD_REQUEST)
+    UPLOAD_FILE_FAILED(1020, "Upload file failed", HttpStatus.BAD_REQUEST),
+    FIRSTNAME_INVALID(1021,"First Name must be characters only, no spacing", HttpStatus.BAD_REQUEST),
+    NOT_BLANK(1022, "Must not be blank", HttpStatus.BAD_REQUEST),
+    INVALID_EMAIL(1023, "Invalid email", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
         this.message = message;
-        this.statusCode = statusCode;
+        this.httpStatusCode = statusCode;
     }
 
     private final int code;
     private final String message;
-    private final HttpStatusCode statusCode;
+    private final HttpStatusCode httpStatusCode;
 }

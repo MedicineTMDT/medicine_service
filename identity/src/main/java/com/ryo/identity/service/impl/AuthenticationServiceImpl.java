@@ -66,21 +66,16 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     PasswordEncoder passwordEncoder;
+    EmailService emailService;
 
     @Override
-    public UserResponse createUser(@Valid @RequestBody CreateUserRequest request){
+    public UserResponse createUser(CreateUserRequest request){
         User user = userMapper.createUserRequest2User(request);
         log.info("flag1");
         try{
             userRepository.save(user);
             String otp = String.valueOf((int) ((Math.random() * 900000) + 100000));
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(emailAddress);
-            message.setTo(user.getEmail());
-            message.setSubject("Mã xác thực OTP");
-            message.setText("Mã OTP của bạn là: " + otp + "\nMã có hiệu lực trong 5 phút.");
-
-            mailSender.send(message);
+            emailService.sendOtp(user,otp);
             user.setVerifyEmailToken(otp);
             userRepository.save(user);
         }catch(DataIntegrityViolationException e){
@@ -90,7 +85,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse authenticate(@Valid @RequestBody LoginRequest request)
+    public AuthenticationResponse authenticate(LoginRequest request)
     {
         String email = request.getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(
@@ -113,9 +108,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                     .token(generateToken(user))
                     .build();
         }else{
-            return AuthenticationResponse.builder()
-                    .authenticated(isValid)
-                    .build();
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
     }
 
@@ -123,9 +116,10 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     public void logout(LogoutRequest request) throws ParseException, JOSEException{
         try{
             var signedToken = verifyToken(request.getToken(), false);
+            log.error("Invalidated token in logout");
             String jit = signedToken.getJWTClaimsSet().getJWTID();
             Date expiryTime = signedToken.getJWTClaimsSet().getExpirationTime();
-            InvalidatedToken invalidatedToken = invalidatedTokenRepository.save(
+            invalidatedTokenRepository.save(
                     InvalidatedToken.builder()
                             .id(jit)
                             .expiryTime(expiryTime)
@@ -137,7 +131,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     }
 
     @Override
-    public IntrospectResponse introspect(@RequestBody IntrospectRequest request)
+    public IntrospectResponse introspect(IntrospectRequest request)
             throws JOSEException, ParseException
     {
         String token = request.getToken();
@@ -148,6 +142,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             isValid = false;
         }
         if(!isValid){
+            log.info("Token not valid");
             var signedJWT = verifyToken(token, true);
             var jit = signedJWT.getJWTClaimsSet().getJWTID();
             var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
@@ -164,6 +159,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
             var newToken = generateToken(user);
             isValid = true;
+            log.info("return in 170");
             return IntrospectResponse.builder()
                     .valid(isValid)
                     .token(newToken)
@@ -237,7 +233,6 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         return generateToken(user);
     }
 
-
     private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
@@ -253,12 +248,10 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
-
         if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
-
-        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())){
             throw new AppException(ErrorCode.UNAUTHENTICATED);
-
+        }
         return signedJWT;
     }
 

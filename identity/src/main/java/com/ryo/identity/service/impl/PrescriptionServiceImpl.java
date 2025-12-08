@@ -109,8 +109,8 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         for (Intake intake : original.getIntakes()) {
 
             Intake newIntake = Intake.builder()
-                    .time(intake.getTime())          // giữ nguyên hoặc tự reset tùy bạn
-                    .status("PENDING")                // reset trạng thái
+                    .time(intake.getTime())
+                    .status("PENDING")
                     .prescription(copy)
                     .build();
 
@@ -119,7 +119,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
             for (IntakeItem item : intake.getItems()) {
                 IntakeItem newItem = IntakeItem.builder()
                         .intake(newIntake)
-                        .drug(item.getDrug())         // giữ nguyên drug, không clone
+                        .drug(item.getDrug())
                         .quantity(item.getQuantity())
                         .build();
 

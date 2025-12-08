@@ -15,5 +15,6 @@ public class UserResponse {
     String username;
     String firstName;
     String lastName;
+    String avatarImg;
     Role role;
 }

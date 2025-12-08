@@ -11,10 +11,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreatePostRequest {
-    @NotBlank
+    @NotBlank(message = "NOT_BLANK")
     String title;
 
-    @NotBlank
+    @NotBlank(message = "NOT_BLANK")
     String content;
 
     Boolean proceed;

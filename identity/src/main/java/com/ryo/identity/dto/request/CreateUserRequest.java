@@ -14,22 +14,22 @@ import org.antlr.v4.runtime.misc.NotNull;
 @Data @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateUserRequest {
-    @NotBlank
-    @Size(min = 5, max = 20, message = "username must be between {min} to {max} characters")
+    @NotBlank(message = "NOT_BLANK")
+    @Size(min = 5, max = 20, message = "USERNAME_INVALID")
     String username;
 
-    @NotBlank
-    @Size(min = 6, max = 20, message = "Password must be between {min} to {max} characters")
+    @NotBlank(message = "NOT_BLANK")
+    @Size(min = 6, max = 20, message = "INVALID_PASSWORD")
     String password;
 
-    @NotBlank
+    @NotBlank(message = "NOT_BLANK")
     String firstName;
 
-    @NotBlank
+    @NotBlank(message = "NOT_BLANK")
     String lastName;
 
-    @Email
-    @NotBlank
+    @Email(message = "INVALID_EMAIL")
+    @NotBlank(message = "NOT_BLANK")
     String email;
 
     Role role;

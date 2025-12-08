@@ -33,10 +33,12 @@ public class Category {
 
     // Quan hệ 1-n với CategoryDetail
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Set<CategoryDetail> categoryDetails;
 
     // Quan hệ n-n với Drug (thông qua bảng trung gian category_drug)
     @ManyToMany(fetch = FetchType.LAZY)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @JoinTable(
             name = "category_drug",
             joinColumns = @JoinColumn(name = "category_id"),

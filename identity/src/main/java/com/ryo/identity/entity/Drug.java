@@ -26,6 +26,7 @@ public class Drug {
     private String name;
 
     @Column(columnDefinition = "TEXT")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String content;
 
     @Column(columnDefinition = "TEXT")
@@ -49,7 +50,8 @@ public class Drug {
     private Map<String, Object> info;
 
     // Quan hệ n-n với Category (đã map bên Category)
-    @ManyToMany(mappedBy = "drugs")
+    @ManyToMany(mappedBy = "drugs",fetch = FetchType.LAZY)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Set<Category> categories = new HashSet<>();
 
     // Quan hệ n-n với MergedIngredient (thông qua bảng drug_ingredient_rel)
@@ -59,5 +61,6 @@ public class Drug {
             joinColumns = @JoinColumn(name = "drug_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Set<MergedIngredient> mergedIngredients = new HashSet<>();
 }

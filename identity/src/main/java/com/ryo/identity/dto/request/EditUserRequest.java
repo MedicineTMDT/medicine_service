@@ -14,19 +14,18 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EditUserRequest {
 
-    @NotBlank
+    @NotBlank(message = "NOT_BLANK")
     String userId;
 
-    @NotBlank
-    @Size(min = 5, max = 20, message = "username must be between {min} to {max} characters")
+    @NotBlank(message = "NOT_BLANK")
+    @Size(min = 5, max = 20, message = "USERNAME_INVALID")
     String username;
 
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "First name must contain only letters")
-    @NotBlank
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "FIRSTNAME_INVALID")
+    @NotBlank(message = "NOT_BLANK")
     String firstName;
 
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "Last name must contain only letters")
-    @NotBlank
+    @NotBlank(message = "NOT_BLANK")
     String lastName;
 
     String avatarImg;

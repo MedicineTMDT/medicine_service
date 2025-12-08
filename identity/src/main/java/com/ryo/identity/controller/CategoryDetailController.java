@@ -1,19 +1,24 @@
 package com.ryo.identity.controller;
 
 import com.ryo.identity.dto.request.CategoryDetailRequest;
-import com.ryo.identity.dto.response.ApiResponse;
+import com.ryo.identity.dto.response.APIResponse;
 import com.ryo.identity.dto.response.CategoryDetailResponse;
 import com.ryo.identity.dto.response.CategorySimpleResponse;
 import com.ryo.identity.entity.CategoryDetail;
 import com.ryo.identity.service.ICategoryDetailService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/category-detail")
+@RequestMapping("/api/v1/category-detail")
 @RequiredArgsConstructor
+@Tag(
+        name = "CategoryDetail API",
+        description = "API get category detail theo id, pageable, pageable + name, category id, thêm xóa sửa"
+)
 public class CategoryDetailController {
 
     private final ICategoryDetailService service;
@@ -22,8 +27,8 @@ public class CategoryDetailController {
     // CREATE
     // --------------------------------------------------------
     @PostMapping
-    public ApiResponse<CategoryDetailResponse> create(@RequestBody CategoryDetailRequest req) {
-        return ApiResponse.<CategoryDetailResponse>builder()
+    public APIResponse<CategoryDetailResponse> create(@RequestBody CategoryDetailRequest req) {
+        return APIResponse.<CategoryDetailResponse>builder()
                 .result(service.create(req))
                 .message("Created successfully")
                 .build();
@@ -33,11 +38,11 @@ public class CategoryDetailController {
     // UPDATE
     // --------------------------------------------------------
     @PutMapping("/{id}")
-    public ApiResponse<CategoryDetailResponse> update(
+    public APIResponse<CategoryDetailResponse> update(
             @PathVariable Integer id,
             @RequestBody CategoryDetailRequest req
     ) {
-        return ApiResponse.<CategoryDetailResponse>builder()
+        return APIResponse.<CategoryDetailResponse>builder()
                 .result(service.update(id, req))
                 .message("Updated successfully")
                 .build();
@@ -47,9 +52,9 @@ public class CategoryDetailController {
     // DELETE
     // --------------------------------------------------------
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(@PathVariable Integer id) {
+    public APIResponse<Void> delete(@PathVariable Integer id) {
         service.delete(id);
-        return ApiResponse.<Void>builder()
+        return APIResponse.<Void>builder()
                 .message("Deleted successfully")
                 .build();
     }
@@ -58,8 +63,8 @@ public class CategoryDetailController {
     // GET BY ID (detail object)
     // --------------------------------------------------------
     @GetMapping("/{id}")
-    public ApiResponse<CategoryDetail> getOne(@PathVariable Integer id) {
-        return ApiResponse.<CategoryDetail>builder()
+    public APIResponse<CategoryDetail> getOne(@PathVariable Integer id) {
+        return APIResponse.<CategoryDetail>builder()
                 .result(service.get(id))
                 .build();
     }
@@ -68,11 +73,11 @@ public class CategoryDetailController {
     // LIST BY CATEGORY ID → trả về SimpleResponse
     // --------------------------------------------------------
     @GetMapping("/by-category/{categoryId}")
-    public ApiResponse<Page<CategorySimpleResponse>> getByCategory(
+    public APIResponse<Page<CategorySimpleResponse>> getByCategory(
             Pageable pageable,
             @PathVariable Integer categoryId
     ) {
-        return ApiResponse.<Page<CategorySimpleResponse>>builder()
+        return APIResponse.<Page<CategorySimpleResponse>>builder()
                 .result(service.getCategoryDetailByCategoryId(pageable, categoryId))
                 .build();
     }
@@ -81,11 +86,11 @@ public class CategoryDetailController {
     // SEARCH BY NAME
     // --------------------------------------------------------
     @GetMapping("/search")
-    public ApiResponse<Page<CategorySimpleResponse>> searchByName(
+    public APIResponse<Page<CategorySimpleResponse>> searchByName(
             Pageable pageable,
             @RequestParam String name
     ) {
-        return ApiResponse.<Page<CategorySimpleResponse>>builder()
+        return APIResponse.<Page<CategorySimpleResponse>>builder()
                 .result(service.getCategoryDetailByCategoryDetailName(pageable, name))
                 .build();
     }
@@ -94,8 +99,8 @@ public class CategoryDetailController {
     // GET ALL (pagination)
     // --------------------------------------------------------
     @GetMapping
-    public ApiResponse<Page<CategoryDetailResponse>> getAll(Pageable pageable) {
-        return ApiResponse.<Page<CategoryDetailResponse>>builder()
+    public APIResponse<Page<CategoryDetailResponse>> getAll(Pageable pageable) {
+        return APIResponse.<Page<CategoryDetailResponse>>builder()
                 .result(service.getAll(pageable))
                 .build();
     }

@@ -4,6 +4,7 @@ import com.ryo.identity.constant.TypeOfRequest;
 import com.ryo.identity.dto.request.CreateSuggestionRequest;
 import com.ryo.identity.entity.Request;
 import com.ryo.identity.service.IRequestService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/requests")
+@RequestMapping("/api/v1/requests")
 @RequiredArgsConstructor
+@Tag(
+        name = "Request API",
+        description = "API lấy request theo id user, theo type của request, getAll , và tạo request."
+)
 public class RequestController {
 
     private final IRequestService requestService;

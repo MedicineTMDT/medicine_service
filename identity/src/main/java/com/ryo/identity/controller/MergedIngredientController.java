@@ -1,6 +1,5 @@
 package com.ryo.identity.controller;
 
-import com.ryo.identity.dto.response.ApiResponse;
 import com.ryo.identity.dto.response.MergedIngredientResponse;
 import com.ryo.identity.service.IMergedIngredientService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/merged-ingredient")
+@RequestMapping("/api/v1/merged-ingredient")
 @RequiredArgsConstructor
 public class MergedIngredientController {
 

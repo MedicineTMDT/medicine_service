@@ -34,6 +34,7 @@ public class CategoryDetail {
 
     // Khóa ngoại trỏ về Category
     @ManyToOne(fetch = FetchType.LAZY)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @JoinColumn(name = "category_id")
     private Category category;
 }

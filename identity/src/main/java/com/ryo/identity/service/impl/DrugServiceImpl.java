@@ -52,7 +52,7 @@ public class DrugServiceImpl implements IDrugService {
 
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DrugResponse create(DrugRequest req) {
         if (drugRepository.findBySlug(req.getSlug()).isPresent())
             throw new AppException(ErrorCode.SLUG_EXISTS);
@@ -87,7 +87,7 @@ public class DrugServiceImpl implements IDrugService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DrugResponse update(DrugRequest req, Integer id) {
         Drug drug = drugRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.DRUG_NOT_EXIST));
@@ -104,7 +104,7 @@ public class DrugServiceImpl implements IDrugService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void delete(Integer id) {
         drugRepository.deleteById(id);
     }
@@ -137,7 +137,7 @@ public class DrugServiceImpl implements IDrugService {
         Drug drug = drugRepository.findById(drugId).orElseThrow(
                 () -> new AppException(ErrorCode.DRUG_NOT_EXIST)
         );
-        return drug.getImage();
+        return drug.getIngredient();
     }
 
     @Override
