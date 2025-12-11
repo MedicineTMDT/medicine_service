@@ -33,6 +33,13 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/{username}")
+    public APIResponse<UserResponse> getUserByUserName(@PathVariable String username) {
+        return APIResponse.<UserResponse>builder()
+                .result(userService.getUserByUserName(username))
+                .build();
+    }
+
     @PostMapping("/forgot-password")
     public APIResponse<?> forgotPassword(@RequestParam String email) {
         userService.forgotPassword(email);

@@ -140,4 +140,11 @@ public class UserServiceImpl {
         }
     }
 
+    public UserResponse getUserByUserName(String userName){
+        User user = userRepository.findByUsername(userName).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+        return userMapper.user2UserResponse(user);
+    }
+
 }
