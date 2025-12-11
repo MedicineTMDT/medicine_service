@@ -60,7 +60,7 @@ public class DrugInteractionController {
     // GET BY LIST OF INGREDIENT NAMES
     @GetMapping("/search-by-ingredients")
     public APIResponse<List<DrugInteraction>> findByIngredientNames(
-            @RequestBody List<String> ingredientNames
+            @RequestParam List<String> ingredientNames
     ) {
         return APIResponse.<List<DrugInteraction>>builder()
                 .result(interactionService.getByListIngredientName(ingredientNames))
