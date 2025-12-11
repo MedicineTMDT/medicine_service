@@ -63,21 +63,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         // 2️⃣ Generate JWT của hệ thống bạn
         String token = authenticationService.generateTokenFromEmail(email);
 
-        AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
-                .id(user.getId())
-                .role(user.getRole())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .username(user.getUsername())
-                .firstName(user.getFirstName())
-                .authenticated(true)
-                .token(token)
-                .build();
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        new ObjectMapper().writeValue(response.getWriter(), authenticationResponse);
+        String redirectUrl = frontendUrl +
+                "/oauth2/success?token=" + token;
+        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 
     // Tạo username không trùng
