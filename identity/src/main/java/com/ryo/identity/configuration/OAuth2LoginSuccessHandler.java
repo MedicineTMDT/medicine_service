@@ -1,6 +1,8 @@
 package com.ryo.identity.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryo.identity.constant.Role;
+import com.ryo.identity.dto.response.AuthenticationResponse;
 import com.ryo.identity.entity.User;
 import com.ryo.identity.repository.UserRepository;
 import com.ryo.identity.service.impl.AuthenticationServiceImpl;
@@ -61,11 +63,21 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         // 2️⃣ Generate JWT của hệ thống bạn
         String token = authenticationService.generateTokenFromEmail(email);
 
-        // 3️⃣ Redirect về FE
-        String redirectUrl = frontendUrl +
-                "/oauth2/success?token=" + token;
+        AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
+                .id(user.getId())
+                .role(user.getRole())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .authenticated(true)
+                .token(token)
+                .build();
 
-        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        new ObjectMapper().writeValue(response.getWriter(), authenticationResponse);
     }
 
     // Tạo username không trùng
