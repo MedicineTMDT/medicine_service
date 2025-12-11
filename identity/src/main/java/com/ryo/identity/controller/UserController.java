@@ -33,7 +33,7 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("username/{username}")
     public APIResponse<UserResponse> getUserByUserName(@PathVariable String username) {
         return APIResponse.<UserResponse>builder()
                 .result(userService.getUserByUserName(username))
