@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,8 +34,9 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
 
     @Override
     @PreAuthorize("hasRole('MED')")
-    public Prescription createPrescription(CreatePrescriptionRequest request, String userId) {
-        User user = userRepository.findById(userId)
+    public Prescription createPrescription(CreatePrescriptionRequest request) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Prescription prescription = Prescription.builder()
@@ -86,8 +88,9 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     }
 
     @Override
-    public Prescription copyPrescription(String prescriptionId, String userId) {
-        User user = userRepository.findById(userId)
+    public Prescription copyPrescription(String prescriptionId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Prescription original = prescriptionRepository.findById(prescriptionId)

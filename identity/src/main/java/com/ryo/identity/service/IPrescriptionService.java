@@ -10,9 +10,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface IPrescriptionService {
-    Prescription createPrescription(CreatePrescriptionRequest request, String userId);
+    Prescription createPrescription(CreatePrescriptionRequest request);
     Prescription createPrescription(Prescription prescription);
-    Prescription copyPrescription(String prescriptionId, String userId);
+    Prescription copyPrescription(String prescriptionId);
     Page<Prescription> searchByName(Integer userId, String name, Pageable pageable);
     Page<Prescription> searchByDate(Integer userId, LocalDate start, LocalDate end, Pageable pageable);
     PrescriptionInfo getPrescriptionReview(List<Integer> listDrug);

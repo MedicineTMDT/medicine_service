@@ -25,11 +25,9 @@ public class PrescriptionController {
     // -----------------------------
     @PostMapping
     public Prescription createPrescription(
-            @RequestBody CreatePrescriptionRequest request,
-            Authentication authentication
+            @RequestBody CreatePrescriptionRequest request
     ) {
-        String userId = authentication.getName();
-        return prescriptionService.createPrescription(request, userId);
+        return prescriptionService.createPrescription(request);
     }
 
     // -----------------------------
@@ -37,11 +35,9 @@ public class PrescriptionController {
     // -----------------------------
     @PostMapping("/{id}/copy")
     public Prescription copyPrescription(
-            @PathVariable String id,
-            Authentication authentication
+            @PathVariable String id
     ) {
-        String userId = authentication.getName();
-        return prescriptionService.copyPrescription(id, userId);
+        return prescriptionService.copyPrescription(id);
     }
 
     // -----------------------------
