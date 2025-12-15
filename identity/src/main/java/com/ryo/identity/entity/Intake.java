@@ -2,9 +2,12 @@ package com.ryo.identity.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -18,12 +21,14 @@ public class Intake {
     private String id;
 
     private LocalDateTime time;
-    private String status;
+    private Boolean status;
 
     @ManyToOne
     @JoinColumn(name = "prescription_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Prescription prescription;
 
-    @OneToMany(mappedBy = "intake", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<IntakeItem> items;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "json")
+    private List<Map<String, Object>> info;
 }

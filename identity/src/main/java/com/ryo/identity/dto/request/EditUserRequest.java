@@ -13,10 +13,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EditUserRequest {
-
-    @NotBlank(message = "NOT_BLANK")
-    String userId;
-
     @NotBlank(message = "NOT_BLANK")
     @Size(min = 5, max = 20, message = "USERNAME_INVALID")
     String username;

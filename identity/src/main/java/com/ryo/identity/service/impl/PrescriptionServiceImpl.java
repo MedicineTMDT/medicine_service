@@ -1,13 +1,15 @@
 package com.ryo.identity.service.impl;
 
+import com.ryo.identity.dto.MedicationSchedule;
 import com.ryo.identity.dto.request.CreatePrescriptionRequest;
-import com.ryo.identity.dto.request.IntakeItemRequest;
 import com.ryo.identity.dto.request.IntakeRequest;
 import com.ryo.identity.dto.response.PrescriptionInfo;
 import com.ryo.identity.entity.*;
 import com.ryo.identity.exception.AppException;
 import com.ryo.identity.exception.ErrorCode;
+import com.ryo.identity.projection.PrescriptionProjection;
 import com.ryo.identity.repository.DrugRepository;
+import com.ryo.identity.repository.IntakeRepository;
 import com.ryo.identity.repository.PrescriptionRepository;
 import com.ryo.identity.repository.UserRepository;
 import com.ryo.identity.service.IPrescriptionService;
@@ -31,122 +33,147 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     private final UserRepository userRepository;
     private final DrugRepository drugRepository;
     private final DrugInteractionServiceImpl drugInteractionService;
+    private final IntakeRepository intakeRepository;
 
     @Override
-    @PreAuthorize("hasRole('MED')")
+    @PreAuthorize("hasAnyAuthority('MED', 'ADMIN')")
     public Prescription createPrescription(CreatePrescriptionRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username)
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        // validate constraint
+        for(IntakeRequest intakeRequest: request.intakes()){
+            int sum = 0;
+            for(MedicationSchedule item: intakeRequest.timingList()){
+                sum+=item.getQuantity();
+            }
+            if(sum > intakeRequest.total()){
+                throw new AppException(ErrorCode.INVALID_PRESCRIPTION);
+            }
+        }
+        // build Intake here
+        Map<LocalDateTime, List<Map<String, Object>>> seen = new HashMap<>();
+        LocalDateTime max = LocalDateTime.MIN;
+        LocalDate startDate = request.startDate();
+        for(IntakeRequest intakeRequest: request.intakes()){
+            int total = intakeRequest.total();
+            while(total > 0){
+                for(MedicationSchedule medicationSchedule: intakeRequest.timingList()){
+                    if(total - medicationSchedule.getQuantity() >= 0){
+                        // tạo khóa cho seen
+                        LocalDateTime key = startDate.atTime(medicationSchedule.getTiming().getTime());
+                        if(key.isAfter(max)){
+                            max = key;
+                        }
+                        Map<String, Object> innerMap = new HashMap<>();
+                        innerMap.put("drugName",intakeRequest.drugName());
+                        innerMap.put("drugId",intakeRequest.drugId());
+                        innerMap.put("usage",intakeRequest.usage());
+                        innerMap.put("medicineForm",intakeRequest.medicineForm());
+                        innerMap.put("noteList",intakeRequest.noteList());
+                        if(seen.containsKey(key)){
+                            seen.get(key).add(
+                                    innerMap
+                            );
+                        }else{
+                            seen.put(key,new ArrayList<>(List.of(innerMap)));
+                        }
+                    }
+                    else{
+                        break;
+                    }
+                    total -= medicationSchedule.getQuantity();
+                    startDate = startDate.plusDays(1);
+                }
+            }
+        }
         Prescription prescription = Prescription.builder()
                 .name(request.name())
                 .description(request.description())
                 .startDate(request.startDate())
-                .endDate(request.endDate())
+                .endDate(max.toLocalDate())
+                .message(request.message())
+                .diagnosisNote(request.diagnosisNote())
+                .info(request.info())
                 .user(user)
                 .build();
-
         List<Intake> intakeList = new ArrayList<>();
-
-        for (IntakeRequest intakeReq : request.intakes()) {
-
+        for(Map.Entry<LocalDateTime,List<Map<String, Object>>> item: seen.entrySet()){
             Intake intake = Intake.builder()
-                    .time((LocalDateTime) intakeReq.time())
-                    .status(intakeReq.status())
                     .prescription(prescription)
+                    .time(item.getKey())
+                    .status(false)
+                    .info(item.getValue())
                     .build();
-
-            List<IntakeItem> items = new ArrayList<>();
-
-            for (IntakeItemRequest itemReq : intakeReq.items()) {
-
-                Drug drug = drugRepository.findById(itemReq.drugId())
-                        .orElseThrow(() -> new RuntimeException("Drug not found"));
-
-                IntakeItem item = IntakeItem.builder()
-                        .intake(intake)
-                        .drug(drug)
-                        .quantity(itemReq.quantity())
-                        .build();
-
-                items.add(item);
-            }
-
-            intake.setItems(items);
             intakeList.add(intake);
         }
-
         prescription.setIntakes(intakeList);
-
-        return prescriptionRepository.save(prescription);
-    }
-
-    @Override
-    public Prescription createPrescription(Prescription prescription) {
         return prescriptionRepository.save(prescription);
     }
 
     @Override
     public Prescription copyPrescription(String prescriptionId) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username)
+        String userId = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Prescription original = prescriptionRepository.findById(prescriptionId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND));
 
-        // Tạo bản clone của prescription
+        LocalDate newStartDate = LocalDate.now();
+
+        long dayOffset = java.time.temporal.ChronoUnit.DAYS.between(
+                original.getStartDate(),
+                newStartDate
+        );
+
         Prescription copy = Prescription.builder()
                 .name(original.getName() + " (Copy)")
                 .description(original.getDescription())
-                .startDate(LocalDate.from(LocalDateTime.now()))
-                .endDate(original.getEndDate())
+                .startDate(newStartDate)
+                .endDate(
+                        original.getEndDate() != null
+                                ? original.getEndDate().plusDays(dayOffset)
+                                : null
+                )
+                .message(original.getMessage())
+                .diagnosisNote(original.getDiagnosisNote())
                 .info(original.getInfo())
-                .drugInteractionResponseList(original.getDrugInteractionResponseList())
                 .user(user)
                 .build();
 
-        List<Intake> newIntakes = new ArrayList<>();
+        List<Intake> copiedIntakes = new ArrayList<>();
 
         for (Intake intake : original.getIntakes()) {
 
-            Intake newIntake = Intake.builder()
-                    .time(intake.getTime())
-                    .status("PENDING")
+            Intake clonedIntake = Intake.builder()
+                    .time(intake.getTime().plusDays(dayOffset)) // shift ngày
+                    .status(false) // reset trạng thái
+                    .info(intake.getInfo())
                     .prescription(copy)
                     .build();
 
-            List<IntakeItem> newItems = new ArrayList<>();
-
-            for (IntakeItem item : intake.getItems()) {
-                IntakeItem newItem = IntakeItem.builder()
-                        .intake(newIntake)
-                        .drug(item.getDrug())
-                        .quantity(item.getQuantity())
-                        .build();
-
-                newItems.add(newItem);
-            }
-
-            newIntake.setItems(newItems);
-            newIntakes.add(newIntake);
+            copiedIntakes.add(clonedIntake);
         }
 
-        copy.setIntakes(newIntakes);
+        copy.setIntakes(copiedIntakes);
 
-        return copy;
+        return prescriptionRepository.save(copy);
     }
 
     @Override
-    public Page<Prescription> searchByName(Integer userId, String name, Pageable pageable) {
-        return prescriptionRepository.findByUserIdAndNameContainingIgnoreCase(userId, name, pageable);
+    public Page<PrescriptionProjection> searchByName(Integer userId, String name, Pageable pageable) {
+        return prescriptionRepository.findByUser_IdAndNameContainingIgnoreCase(userId, name, pageable);
     }
 
     @Override
-    public Page<Prescription> searchByDate(Integer userId, LocalDate start, LocalDate end, Pageable pageable) {
+    public Page<PrescriptionProjection> searchByDate(Integer userId, LocalDate start, LocalDate end, Pageable pageable) {
         return prescriptionRepository
-                .findByUserIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, start, end, pageable);
+                .findByUser_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, start, end, pageable);
     }
 
     @Override
@@ -185,5 +212,19 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
 
     }
 
+    @Override
+    public Prescription getById(String prescriptionId) {
+        return prescriptionRepository.findByUser_IdAndId(prescriptionId);
+    }
+
+    @Override
+    public Intake updateIntakeById(String id){
+        Intake intake = intakeRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.NOT_FOUND)
+        );
+        intake.setStatus(true);
+        intakeRepository.save(intake);
+        return intake;
+    }
 
 }

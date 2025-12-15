@@ -47,7 +47,7 @@ public class CategoryServiceImpl implements ICategoryService {
     public CategoryResponse update(Integer id, CategoryRequest request) {
         log.info("begin update");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("User Name: " + authentication.getName());
+//        log.info("User Name: " + authentication.getName());
         log.info("User Authorities (Roles): " + authentication.getAuthorities());
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));

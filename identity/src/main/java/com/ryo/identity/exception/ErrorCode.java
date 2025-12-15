@@ -30,6 +30,7 @@ public enum ErrorCode {
     FIRSTNAME_INVALID(1021,"First Name must be characters only, no spacing", HttpStatus.BAD_REQUEST),
     NOT_BLANK(1022, "Must not be blank", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL(1023, "Invalid email", HttpStatus.BAD_REQUEST),
+    INVALID_PRESCRIPTION(1024, "Daily dosage exceeds the total prescribed quantity", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

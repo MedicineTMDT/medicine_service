@@ -2,7 +2,9 @@ package com.ryo.identity.service;
 
 import com.ryo.identity.dto.request.CreatePrescriptionRequest;
 import com.ryo.identity.dto.response.PrescriptionInfo;
+import com.ryo.identity.entity.Intake;
 import com.ryo.identity.entity.Prescription;
+import com.ryo.identity.projection.PrescriptionProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,9 +13,10 @@ import java.util.List;
 
 public interface IPrescriptionService {
     Prescription createPrescription(CreatePrescriptionRequest request);
-    Prescription createPrescription(Prescription prescription);
     Prescription copyPrescription(String prescriptionId);
-    Page<Prescription> searchByName(Integer userId, String name, Pageable pageable);
-    Page<Prescription> searchByDate(Integer userId, LocalDate start, LocalDate end, Pageable pageable);
+    Page<PrescriptionProjection> searchByName(Integer userId, String name, Pageable pageable);
+    Page<PrescriptionProjection> searchByDate(Integer userId, LocalDate start, LocalDate end, Pageable pageable);
     PrescriptionInfo getPrescriptionReview(List<Integer> listDrug);
+    Prescription getById(String prescriptionId);
+    Intake updateIntakeById(String id);
 }

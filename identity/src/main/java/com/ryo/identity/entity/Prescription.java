@@ -33,20 +33,16 @@ public class Prescription {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Intake> intakes = new ArrayList<>();
 
-    // do sth here about prescription info :vvvx
-//    private List<DrugResponse> infoList;
-//    private List<DrugInteractionResponse> drugInteractionResponseList;
-
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
-    private List<Map<String, String>> info;
+    private Map<String, Object> info;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "json")
-    private List<Map<String, String>> drugInteractionResponseList;
+    private String message;
+    private String diagnosisNote;
 }

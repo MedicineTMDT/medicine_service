@@ -44,8 +44,8 @@ public class RequestServiceImpl implements IRequestService {
     @Override
     public Request createRequest(CreateSuggestionRequest request) {
         // Lấy user hiện tại
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username).orElseThrow(
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
 

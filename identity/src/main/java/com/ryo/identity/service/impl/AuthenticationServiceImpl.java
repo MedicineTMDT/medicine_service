@@ -205,7 +205,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUsername())
+                .subject(user.getId())
                 .issuer("med.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(

@@ -49,9 +49,9 @@ public class UserServiceImpl {
 
     public UserResponse editUserInfo(EditUserRequest request){
         log.info("BEGIN_EDIT_USER_INFO");
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("Current Username: " + currentUsername);
-        User user = userRepository.findByUsername(currentUsername)
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Current Username: " + userId);
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         // Check username unique
@@ -63,18 +63,6 @@ public class UserServiceImpl {
         // Update fields
         userMapper.editUserRequest(user, request);
         userRepository.save(user);
-        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
-
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(
-                user.getUsername(),        // principal mới
-                currentAuth.getCredentials(),
-                currentAuth.getAuthorities()
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
-        // Test
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("userName: " + username);
         return userMapper.user2UserResponse(user);
     }
 
@@ -108,8 +96,8 @@ public class UserServiceImpl {
     public String updateAvatarImg(MultipartFile file) {
         try {
             // Lấy email từ SecurityContext
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userRepository.findByUsername(username)
+            String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
             // Upload ảnh lên Cloudinary
             Map uploadResult = cloudinary.uploader().upload(

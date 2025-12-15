@@ -2,7 +2,9 @@ package com.ryo.identity.controller;
 
 import com.ryo.identity.dto.request.CreatePrescriptionRequest;
 import com.ryo.identity.dto.response.PrescriptionInfo;
+import com.ryo.identity.entity.Intake;
 import com.ryo.identity.entity.Prescription;
+import com.ryo.identity.projection.PrescriptionProjection;
 import com.ryo.identity.service.IPrescriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1//prescriptions")
+@RequestMapping("/api/v1/prescriptions")
 @RequiredArgsConstructor
 public class PrescriptionController {
 
@@ -44,7 +46,7 @@ public class PrescriptionController {
     // SEARCH BY NAME
     // -----------------------------
     @GetMapping("/search/name")
-    public Page<Prescription> searchByName(
+    public Page<PrescriptionProjection> searchByName(
             @RequestParam Integer userId,
             @RequestParam String name,
             Pageable pageable
@@ -56,7 +58,7 @@ public class PrescriptionController {
     // SEARCH BY DATE RANGE
     // -----------------------------
     @GetMapping("/search/date")
-    public Page<Prescription> searchByDate(
+    public Page<PrescriptionProjection> searchByDate(
             @RequestParam Integer userId,
             @RequestParam LocalDate start,
             @RequestParam LocalDate end,
@@ -68,10 +70,17 @@ public class PrescriptionController {
     // -----------------------------
     // REVIEW DRUG INTERACTION
     // -----------------------------
-    @PostMapping("/review")
+    @GetMapping("/review")
     public PrescriptionInfo getPrescriptionReview(
             @RequestBody List<Integer> listDrugIds
     ) {
         return prescriptionService.getPrescriptionReview(listDrugIds);
+    }
+
+    @PutMapping("/edit/{id}")
+    public Intake editIntakeStatus(
+        @PathVariable String id
+    ){
+        return prescriptionService.updateIntakeById(id);
     }
 }
