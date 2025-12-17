@@ -72,7 +72,7 @@ public class PrescriptionController {
     // -----------------------------
     @GetMapping("/review")
     public PrescriptionInfo getPrescriptionReview(
-            @RequestBody List<Integer> listDrugIds
+            @RequestParam List<Integer> listDrugIds
     ) {
         return prescriptionService.getPrescriptionReview(listDrugIds);
     }
@@ -82,5 +82,12 @@ public class PrescriptionController {
         @PathVariable String id
     ){
         return prescriptionService.updateIntakeById(id);
+    }
+
+    @GetMapping("/{id}")
+    public Prescription getPrescriptionById(
+            @PathVariable String id
+    ){
+        return prescriptionService.getById(id);
     }
 }
