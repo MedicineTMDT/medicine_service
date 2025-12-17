@@ -132,7 +132,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         );
 
         Prescription copy = Prescription.builder()
-                .name(original.getName() + " (Copy)")
+                .name(original.getName())
                 .description(original.getDescription())
                 .startDate(newStartDate)
                 .endDate(
