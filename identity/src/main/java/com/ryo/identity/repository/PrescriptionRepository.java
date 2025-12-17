@@ -20,5 +20,5 @@ public interface PrescriptionRepository extends JpaRepository<Prescription,Strin
             Pageable pageable
     );
 
-    Prescription findByUser_IdAndId(String id);
+    Prescription findByUser_IdAndId(String userId, String id);
 }

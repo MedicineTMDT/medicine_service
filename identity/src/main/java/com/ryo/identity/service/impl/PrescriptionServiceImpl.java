@@ -214,7 +214,8 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
 
     @Override
     public Prescription getById(String prescriptionId) {
-        return prescriptionRepository.findByUser_IdAndId(prescriptionId);
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        return prescriptionRepository.findByUser_IdAndId(userId,prescriptionId);
     }
 
     @Override
