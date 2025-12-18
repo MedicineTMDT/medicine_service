@@ -166,12 +166,14 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     }
 
     @Override
-    public Page<PrescriptionProjection> searchByName(Integer userId, String name, Pageable pageable) {
+    public Page<PrescriptionProjection> searchByName(String name, Pageable pageable) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         return prescriptionRepository.findByUser_IdAndNameContainingIgnoreCase(userId, name, pageable);
     }
 
     @Override
-    public Page<PrescriptionProjection> searchByDate(Integer userId, LocalDate start, LocalDate end, Pageable pageable) {
+    public Page<PrescriptionProjection> searchByDate(LocalDate start, LocalDate end, Pageable pageable) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         return prescriptionRepository
                 .findByUser_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, start, end, pageable);
     }

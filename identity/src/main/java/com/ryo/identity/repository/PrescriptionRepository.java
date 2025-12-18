@@ -10,11 +10,11 @@ import java.time.LocalDate;
 
 public interface PrescriptionRepository extends JpaRepository<Prescription,String> {
     // search by name
-    Page<PrescriptionProjection> findByUser_IdAndNameContainingIgnoreCase(Integer userId, String name, Pageable pageable);
+    Page<PrescriptionProjection> findByUser_IdAndNameContainingIgnoreCase(String userId, String name, Pageable pageable);
 
     // filter by date range
     Page<PrescriptionProjection> findByUser_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(
-            Integer userId,
+            String userId,
             LocalDate start,
             LocalDate end,
             Pageable pageable

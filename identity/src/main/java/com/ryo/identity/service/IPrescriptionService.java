@@ -14,8 +14,8 @@ import java.util.List;
 public interface IPrescriptionService {
     Prescription createPrescription(CreatePrescriptionRequest request);
     Prescription copyPrescription(String prescriptionId);
-    Page<PrescriptionProjection> searchByName(Integer userId, String name, Pageable pageable);
-    Page<PrescriptionProjection> searchByDate(Integer userId, LocalDate start, LocalDate end, Pageable pageable);
+    Page<PrescriptionProjection> searchByName(String name, Pageable pageable);
+    Page<PrescriptionProjection> searchByDate(LocalDate start, LocalDate end, Pageable pageable);
     PrescriptionInfo getPrescriptionReview(List<Integer> listDrug);
     Prescription getById(String prescriptionId);
     Intake updateIntakeById(String id);

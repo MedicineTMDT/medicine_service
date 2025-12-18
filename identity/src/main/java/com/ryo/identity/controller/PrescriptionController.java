@@ -47,11 +47,10 @@ public class PrescriptionController {
     // -----------------------------
     @GetMapping("/search/name")
     public Page<PrescriptionProjection> searchByName(
-            @RequestParam Integer userId,
             @RequestParam String name,
             Pageable pageable
     ) {
-        return prescriptionService.searchByName(userId, name, pageable);
+        return prescriptionService.searchByName(name, pageable);
     }
 
     // -----------------------------
@@ -59,12 +58,11 @@ public class PrescriptionController {
     // -----------------------------
     @GetMapping("/search/date")
     public Page<PrescriptionProjection> searchByDate(
-            @RequestParam Integer userId,
             @RequestParam LocalDate start,
             @RequestParam LocalDate end,
             Pageable pageable
     ) {
-        return prescriptionService.searchByDate(userId, start, end, pageable);
+        return prescriptionService.searchByDate(start, end, pageable);
     }
 
     // -----------------------------
