@@ -55,36 +55,49 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         // build Intake here
         Map<LocalDateTime, List<Map<String, Object>>> seen = new HashMap<>();
         LocalDateTime max = LocalDateTime.MIN;
-        LocalDate startDate = request.startDate();
+        
         for(IntakeRequest intakeRequest: request.intakes()){
             int total = intakeRequest.total();
+            LocalDate drugStartDate = request.startDate(); // Each drug starts from original start date
+            
             while(total > 0){
+                boolean anyDoseGiven = false;
+                
+                // Process all timings for the current day
                 for(MedicationSchedule medicationSchedule: intakeRequest.timingList()){
                     if(total - medicationSchedule.getQuantity() >= 0){
-                        // tạo khóa cho seen
-                        LocalDateTime key = startDate.atTime(medicationSchedule.getTiming().getTime());
+                        // Create key for seen map
+                        LocalDateTime key = drugStartDate.atTime(medicationSchedule.getTiming().getTime());
                         if(key.isAfter(max)){
                             max = key;
                         }
                         Map<String, Object> innerMap = new HashMap<>();
-                        innerMap.put("drugName",intakeRequest.drugName());
-                        innerMap.put("drugId",intakeRequest.drugId());
-                        innerMap.put("usage",intakeRequest.usage());
-                        innerMap.put("medicineForm",intakeRequest.medicineForm());
-                        innerMap.put("noteList",intakeRequest.noteList());
+                        innerMap.put("drugName", intakeRequest.drugName());
+                        innerMap.put("drugId", intakeRequest.drugId());
+                        innerMap.put("usage", intakeRequest.usage());
+                        innerMap.put("medicineForm", intakeRequest.medicineForm());
+                        innerMap.put("noteList", intakeRequest.noteList());
+                        innerMap.put("quantitative", intakeRequest.quantitative());
+                        innerMap.put("unit", intakeRequest.unit());
+                        
                         if(seen.containsKey(key)){
-                            seen.get(key).add(
-                                    innerMap
-                            );
-                        }else{
-                            seen.put(key,new ArrayList<>(List.of(innerMap)));
+                            seen.get(key).add(innerMap);
+                        } else {
+                            seen.put(key, new ArrayList<>(List.of(innerMap)));
                         }
-                    }
-                    else{
+                        
+                        total -= medicationSchedule.getQuantity();
+                        anyDoseGiven = true;
+                    } else {
                         break;
                     }
-                    total -= medicationSchedule.getQuantity();
-                    startDate = startDate.plusDays(1);
+                }
+                
+                // Only advance to next day after processing all timings for current day
+                if(anyDoseGiven){
+                    drugStartDate = drugStartDate.plusDays(1);
+                } else {
+                    break; // Safety exit if no doses could be given
                 }
             }
         }
