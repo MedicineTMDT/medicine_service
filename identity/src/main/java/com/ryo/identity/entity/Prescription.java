@@ -37,7 +37,7 @@ public class Prescription {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "patient_id")
     @com.fasterxml.jackson.annotation.JsonIgnore
     private User patient;
 
