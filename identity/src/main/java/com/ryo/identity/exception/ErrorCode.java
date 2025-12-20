@@ -31,6 +31,11 @@ public enum ErrorCode {
     NOT_BLANK(1022, "Must not be blank", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL(1023, "Invalid email", HttpStatus.BAD_REQUEST),
     INVALID_PRESCRIPTION(1024, "Daily dosage exceeds the total prescribed quantity", HttpStatus.BAD_REQUEST),
+    DUPLICATE_ACTIVE_PRESCRIPTION(
+            1025,
+            "You are currently taking a similar active prescription",
+            HttpStatus.BAD_REQUEST
+    ),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

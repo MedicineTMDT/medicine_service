@@ -36,6 +36,11 @@ public class Prescription {
     @com.fasterxml.jackson.annotation.JsonIgnore
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private User patient;
+
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Intake> intakes = new ArrayList<>();
 
@@ -45,4 +50,7 @@ public class Prescription {
 
     private String message;
     private String diagnosisNote;
+
+    private Boolean activate;
+    private String orgPrescriptionId;
 }

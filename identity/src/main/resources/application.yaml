@@ -48,6 +48,7 @@ admin:
 
 frontend:
   url: ${FE_URL}
+  accept_prescription_endpoint: ${ACCEPT_PRESCRIPTION_ENDPOINT}
 
 cloudinary:
   name: ${CLOUDINARY_CLOUD_NAME}

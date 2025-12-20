@@ -34,6 +34,9 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     private final DrugRepository drugRepository;
     private final DrugInteractionServiceImpl drugInteractionService;
     private final IntakeRepository intakeRepository;
+    private final EmailService emailService;
+
+
 
     @Override
     @PreAuthorize("hasAnyAuthority('MED', 'ADMIN')")
@@ -41,7 +44,8 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
+        User patient = userRepository.findByEmail(request.patientEmailAddress())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         // validate constraint
         for(IntakeRequest intakeRequest: request.intakes()){
             int sum = 0;
@@ -122,6 +126,10 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
             intakeList.add(intake);
         }
         prescription.setIntakes(intakeList);
+        prescription.setPatient(patient);
+        prescription.setActivate(false);
+        prescription.setOrgPrescriptionId("");
+        emailService.sendPrescriptionConfirmationEmail(patient,user.getFirstName(),prescription.getId());
         return prescriptionRepository.save(prescription);
     }
 
@@ -130,6 +138,11 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         String userId = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();
+        Prescription check = prescriptionRepository
+                .findByPatient_IdAndOrgPrescriptionIdAndActivateTrue(userId, prescriptionId);
+        if (check.getEndDate().isAfter(LocalDate.now())){
+            throw new AppException(ErrorCode.DUPLICATE_ACTIVE_PRESCRIPTION);
+        }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -156,7 +169,8 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                 .message(original.getMessage())
                 .diagnosisNote(original.getDiagnosisNote())
                 .info(original.getInfo())
-                .user(user)
+                .user(original.getUser())
+                .patient(user)
                 .build();
 
         List<Intake> copiedIntakes = new ArrayList<>();
@@ -174,21 +188,22 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         }
 
         copy.setIntakes(copiedIntakes);
-
+        copy.setActivate(true);
+        copy.setOrgPrescriptionId(prescriptionId);
         return prescriptionRepository.save(copy);
     }
 
     @Override
     public Page<PrescriptionProjection> searchByName(String name, Pageable pageable) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return prescriptionRepository.findByUser_IdAndNameContainingIgnoreCase(userId, name, pageable);
+        return prescriptionRepository.findByUser_IdAndNameContainingIgnoreCaseAndActivateTrue(userId, name, pageable);
     }
 
     @Override
     public Page<PrescriptionProjection> searchByDate(LocalDate start, LocalDate end, Pageable pageable) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         return prescriptionRepository
-                .findByUser_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, start, end, pageable);
+                .findByUser_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqualAndActivateTrue(userId, start, end, pageable);
     }
 
     @Override
@@ -230,7 +245,9 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     @Override
     public Prescription getById(String prescriptionId) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return prescriptionRepository.findByUser_IdAndId(userId,prescriptionId);
+        return prescriptionRepository
+                .findByUser_IdAndIdAndActivateTrue(userId,prescriptionId)
+                .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND));
     }
 
     @Override
@@ -242,5 +259,34 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         intakeRepository.save(intake);
         return intake;
     }
+
+    public void accept_prescription(String prescriptionId) {
+        Prescription prescription = prescriptionRepository.findById(prescriptionId)
+                .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND));
+        prescription.setActivate(true);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority('MED', 'ADMIN')")
+    public void doctor_delete_prescription(String prescriptionId){
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Prescription prescription = prescriptionRepository
+                .findByUser_IdAndId(userId, prescriptionId)
+                .orElseThrow(()-> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND))
+                ;
+        prescriptionRepository.delete(prescription);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyAuthority('USER')")
+    public void user_delete_prescription(String prescriptionId){
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Prescription prescription = prescriptionRepository
+                .findByPatient_IdAndId(userId, prescriptionId)
+                .orElseThrow(()-> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND))
+                ;
+        prescriptionRepository.delete(prescription);
+    }
+
 
 }

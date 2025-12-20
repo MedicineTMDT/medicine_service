@@ -88,4 +88,36 @@ public class PrescriptionController {
     ){
         return prescriptionService.getById(id);
     }
+
+    // -----------------------------
+    // ACCEPT PRESCRIPTION (PATIENT)
+    // -----------------------------
+    @PutMapping("/{id}/accept")
+    public void acceptPrescription(
+            @PathVariable String id
+    ) {
+        prescriptionService.accept_prescription(id);
+    }
+
+
+    // -----------------------------
+    // DOCTOR DELETE PRESCRIPTION
+    // -----------------------------
+    @DeleteMapping("/{id}/doctor")
+    public void doctorDeletePrescription(
+            @PathVariable String id
+    ) {
+        prescriptionService.doctor_delete_prescription(id);
+    }
+
+    // -----------------------------
+    // PATIENT DELETE PRESCRIPTION
+    // -----------------------------
+    @DeleteMapping("/{id}/patient")
+    public void patientDeletePrescription(
+            @PathVariable String id
+    ) {
+        prescriptionService.user_delete_prescription(id);
+    }
+
 }

@@ -19,4 +19,7 @@ public interface IPrescriptionService {
     PrescriptionInfo getPrescriptionReview(List<Integer> listDrug);
     Prescription getById(String prescriptionId);
     Intake updateIntakeById(String id);
+    void accept_prescription(String prescriptionId);
+    void doctor_delete_prescription(String prescriptionId);
+    void user_delete_prescription(String prescriptionId);
 }

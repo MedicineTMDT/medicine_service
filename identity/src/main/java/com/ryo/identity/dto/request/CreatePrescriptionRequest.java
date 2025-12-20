@@ -9,6 +9,7 @@ public record CreatePrescriptionRequest(
     String description,
 
     String userId, // thông tin của người kê thuốc
+    String patientEmailAddress,
     LocalDate startDate,
 
     String message,
