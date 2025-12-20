@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -202,15 +203,32 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
 
     @Override
     public Page<PrescriptionProjection> searchByName(String name, Pageable pageable) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return prescriptionRepository.findByUser_IdAndNameContainingIgnoreCaseAndActivateTrue(userId, name, pageable);
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+        boolean isUser = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("USER"));
+        if(isUser){
+            return prescriptionRepository.findByPatient_IdAndNameContainingIgnoreCaseAndActivateTrue(userId, name, pageable);
+        }
+        return prescriptionRepository.findByUser_IdAndNameContainingIgnoreCase(userId, name, pageable);
     }
 
     @Override
     public Page<PrescriptionProjection> searchByDate(LocalDate start, LocalDate end, Pageable pageable) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+        boolean isUser = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("USER"));
+        if(isUser){
+            return prescriptionRepository.
+                    findByPatient_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqualAndActivateTrue
+                            (userId, start, end, pageable);
+        }
         return prescriptionRepository
-                .findByUser_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqualAndActivateTrue(userId, start, end, pageable);
+                .findByUser_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqual
+                        (userId, start, end, pageable);
     }
 
     @Override
@@ -267,6 +285,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         return intake;
     }
 
+    @Override
     public void accept_prescription(String prescriptionId) {
         Prescription prescription = prescriptionRepository.findById(prescriptionId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND));

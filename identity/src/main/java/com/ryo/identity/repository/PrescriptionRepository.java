@@ -10,10 +10,16 @@ import java.time.LocalDate;
 import java.util.Optional;
 public interface PrescriptionRepository extends JpaRepository<Prescription,String> {
     // search by name
-    Page<PrescriptionProjection> findByUser_IdAndNameContainingIgnoreCaseAndActivateTrue(String userId, String name, Pageable pageable);
-
+    Page<PrescriptionProjection> findByPatient_IdAndNameContainingIgnoreCaseAndActivateTrue(String userId, String name, Pageable pageable);
+    Page<PrescriptionProjection> findByUser_IdAndNameContainingIgnoreCase(String userId, String name, Pageable pageable);
     // filter by date range
-    Page<PrescriptionProjection> findByUser_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqualAndActivateTrue(
+    Page<PrescriptionProjection> findByUser_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(
+            String userId,
+            LocalDate start,
+            LocalDate end,
+            Pageable pageable
+    );
+    Page<PrescriptionProjection> findByPatient_IdAndStartDateGreaterThanEqualAndEndDateLessThanEqualAndActivateTrue(
             String userId,
             LocalDate start,
             LocalDate end,
