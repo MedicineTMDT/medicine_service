@@ -44,8 +44,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        User patient = userRepository.findByEmail(request.patientEmailAddress())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
         // validate constraint
         for(IntakeRequest intakeRequest: request.intakes()){
             int sum = 0;
@@ -125,11 +124,18 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                     .build();
             intakeList.add(intake);
         }
+
         prescription.setIntakes(intakeList);
-        prescription.setPatient(patient);
         prescription.setActivate(false);
         prescription.setOrgPrescriptionId("");
-        emailService.sendPrescriptionConfirmationEmail(patient,user.getFirstName(),prescription.getId());
+
+        if(request.patientEmailAddress().isBlank() || request.patientEmailAddress().isEmpty()){
+            User patient = userRepository.findByEmail(request.patientEmailAddress())
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+            prescription.setPatient(patient);
+            emailService.sendPrescriptionConfirmationEmail(patient,user.getFirstName(),prescription.getId());
+        }
+
         return prescriptionRepository.save(prescription);
     }
 
