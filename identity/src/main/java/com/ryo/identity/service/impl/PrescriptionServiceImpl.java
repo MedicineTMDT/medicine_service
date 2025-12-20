@@ -136,9 +136,12 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         User patient = userRepository.findByEmail(request.patientEmailAddress())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         prescription.setPatient(patient);
+
+        Prescription result = prescriptionRepository.save(prescription);
         emailService.sendPrescriptionConfirmationEmail
-                (patient,user.getFirstName(),prescription.getId());
-        return prescriptionRepository.save(prescription);
+                (patient,user.getFirstName(),result.getId());
+
+        return result;
     }
 
     @Override
