@@ -130,12 +130,13 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         prescription.setOrgPrescriptionId("");
 
         if(request.patientEmailAddress().isBlank() || request.patientEmailAddress().isEmpty()){
-            User patient = userRepository.findByEmail(request.patientEmailAddress())
-                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-            prescription.setPatient(patient);
-            emailService.sendPrescriptionConfirmationEmail(patient,user.getFirstName(),prescription.getId());
+            return prescriptionRepository.save(prescription);
         }
-
+        User patient = userRepository.findByEmail(request.patientEmailAddress())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        prescription.setPatient(patient);
+        emailService.sendPrescriptionConfirmationEmail
+                (patient,user.getFirstName(),prescription.getId());
         return prescriptionRepository.save(prescription);
     }
 
@@ -146,7 +147,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                 .getName();
         Prescription check = prescriptionRepository
                 .findByPatient_IdAndOrgPrescriptionIdAndActivateTrue(userId, prescriptionId);
-        if (check.getEndDate().isAfter(LocalDate.now())){
+        if (check != null && check.getEndDate().isAfter(LocalDate.now())){
             throw new AppException(ErrorCode.DUPLICATE_ACTIVE_PRESCRIPTION);
         }
 
