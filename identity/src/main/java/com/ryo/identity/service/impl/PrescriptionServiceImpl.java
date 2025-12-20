@@ -287,9 +287,15 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
 
     @Override
     public void accept_prescription(String prescriptionId) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
         Prescription prescription = prescriptionRepository.findById(prescriptionId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND));
         prescription.setActivate(true);
+        prescription.setPatient(user);
+        prescriptionRepository.save(prescription);
     }
 
     @Override
