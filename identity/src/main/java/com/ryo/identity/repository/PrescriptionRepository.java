@@ -26,7 +26,7 @@ public interface PrescriptionRepository extends JpaRepository<Prescription,Strin
             Pageable pageable
     );
 
-    Optional<Prescription> findByUser_IdAndIdAndActivateTrue(String userId, String id);
+    Optional<Prescription> findByPatient_IdAndIdAndActivateTrue(String userId, String id);
     Optional<Prescription> findByUser_IdAndId(String userId, String id);
     Optional<Prescription> findByPatient_IdAndId(String patientId, String id);
     Prescription findByPatient_IdAndOrgPrescriptionIdAndActivateTrue(String patientId, String orgPresId);

@@ -272,9 +272,18 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
 
     @Override
     public Prescription getById(String prescriptionId) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+        boolean isUser = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("USER"));
+        if(isUser){
+            return prescriptionRepository
+                    .findByPatient_IdAndIdAndActivateTrue(userId,prescriptionId)
+                    .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND));
+        }
         return prescriptionRepository
-                .findByUser_IdAndIdAndActivateTrue(userId,prescriptionId)
+                .findByUser_IdAndId(userId,prescriptionId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND));
     }
 
