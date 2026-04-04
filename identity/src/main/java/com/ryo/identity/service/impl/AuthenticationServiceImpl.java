@@ -159,7 +159,6 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
             var newToken = generateToken(user);
             isValid = true;
-            log.info("return in 170");
             return IntrospectResponse.builder()
                     .valid(isValid)
                     .token(newToken)
