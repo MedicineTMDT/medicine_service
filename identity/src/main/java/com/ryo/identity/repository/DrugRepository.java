@@ -26,4 +26,6 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
 
     List<DrugProjection> findTop10ByNameStartingWithIgnoreCase(String name);
 
+    List<DrugProjection> findTop5ByNameContainingIgnoreCase(String name);
+
 }

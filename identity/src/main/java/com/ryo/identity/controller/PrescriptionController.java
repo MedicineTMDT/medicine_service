@@ -7,21 +7,35 @@ import com.ryo.identity.entity.Prescription;
 import com.ryo.identity.projection.PrescriptionProjection;
 import com.ryo.identity.service.IPrescriptionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/prescriptions")
 @RequiredArgsConstructor
+@Slf4j
 public class PrescriptionController {
 
     private final IPrescriptionService prescriptionService;
 
+    @PostMapping("/scan")
+    public CreatePrescriptionRequest scanPrescriptionImage(
+            @RequestParam("image") MultipartFile image
+    ) throws IOException {
+        byte[] imageBytes = image.getBytes();
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+        String mimeType = image.getContentType();
+        return prescriptionService.extractPrescriptionFromImage(base64Image, mimeType);
+    }
     // -----------------------------
     // CREATE PRESCRIPTION (MED only)
     // -----------------------------
