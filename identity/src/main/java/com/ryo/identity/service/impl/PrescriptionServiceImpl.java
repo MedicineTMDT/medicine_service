@@ -28,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -53,6 +54,10 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
 
     public CreatePrescriptionRequest extractPrescriptionFromImage(String base64Image, String mimeType) {
         log.info("extractPrescriptionFromImage");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String email = jwt.getClaim("email");
+
         String systemPrompt = """
         Bạn là AI chuyên đọc đơn thuốc từ hình ảnh.
         Nhiệm vụ: Trích xuất thông tin đơn thuốc từ hình ảnh và trả về JSON.
@@ -83,7 +88,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
           "name": "Tên đơn thuốc hoặc tên bệnh nhân nếu có",
           "description": "Mô tả ngắn đơn thuốc nếu có, hoặc null",
           "userId": null,
-          "patientEmailAddress": null,
+          "patientEmailAddress": "%s",
           "startDate": "YYYY-MM-DD hoặc null nếu không có",
           "message": "Lời nhắn từ bác sĩ nếu có, hoặc null",
           "diagnosisNote": "Chẩn đoán bệnh nếu có, hoặc null",
@@ -105,7 +110,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
             }
           ]
         }
-    """;
+        """.formatted(email);
 
         Map<String, Object> body = Map.of(
                 "system_instruction", Map.of(
@@ -149,7 +154,6 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
             return mapper.readValue(rawText, CreatePrescriptionRequest.class);
         } catch (Exception e) {
             log.error("Gemini scan error: {}", e.getMessage());

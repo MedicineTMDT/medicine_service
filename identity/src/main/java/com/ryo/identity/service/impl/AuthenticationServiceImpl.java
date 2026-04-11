@@ -211,6 +211,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", user.getRole())
+                .claim("email", user.getEmail())
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
