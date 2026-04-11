@@ -54,3 +54,8 @@ cloudinary:
   name: ${CLOUDINARY_CLOUD_NAME}
   apiKey: ${CLOUDINARY_API_KEY}
   password: ${CLOUDINARY_API_SECRET}
+
+google:
+  api:
+    key: ${GOOGLE_API_KEY}
+    model: gemini-2.5-flash

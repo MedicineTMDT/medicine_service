@@ -22,4 +22,7 @@ public interface IPrescriptionService {
     void accept_prescription(String prescriptionId);
     void doctor_delete_prescription(String prescriptionId);
     void user_delete_prescription(String prescriptionId);
+    String ask(String prompt);
+    String askWithSystem(String systemPrompt, String userMessage);
+    CreatePrescriptionRequest extractPrescriptionFromImage(String base64Image, String mimeType);
 }

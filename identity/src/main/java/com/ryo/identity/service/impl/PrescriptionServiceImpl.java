@@ -1,5 +1,12 @@
 package com.ryo.identity.service.impl;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.genai.Client;
+import com.google.genai.types.Content;
+import com.google.genai.types.GenerateContentResponse;
+import com.google.genai.types.Part;
 import com.ryo.identity.dto.MedicationSchedule;
 import com.ryo.identity.dto.request.CreatePrescriptionRequest;
 import com.ryo.identity.dto.request.IntakeRequest;
@@ -14,12 +21,15 @@ import com.ryo.identity.repository.PrescriptionRepository;
 import com.ryo.identity.repository.UserRepository;
 import com.ryo.identity.service.IPrescriptionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,6 +37,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PrescriptionServiceImpl implements IPrescriptionService {
 
@@ -37,7 +48,166 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     private final IntakeRepository intakeRepository;
     private final EmailService emailService;
 
+    private final RestClient geminiRestClient;
+    private final String geminiModel;
 
+    public CreatePrescriptionRequest extractPrescriptionFromImage(String base64Image, String mimeType) {
+        log.info("extractPrescriptionFromImage");
+        String systemPrompt = """
+        Bạn là AI chuyên đọc đơn thuốc từ hình ảnh.
+        Nhiệm vụ: Trích xuất thông tin đơn thuốc từ hình ảnh và trả về JSON.
+        
+        Yêu cầu:
+        - Chỉ trả về JSON thuần túy, không markdown, không giải thích
+        - Nếu không đọc được thì trả về null
+        
+        Các enum hợp lệ:
+        
+        Usage (đường dùng):
+          ORAL, SUBLINGUAL, CHEW, TOPICAL, EYE_DROPS, EAR_DROPS, NASAL_DROPS, IM, IV, SC, RECTAL, VAGINAL
+        
+        MedicineForm (dạng thuốc):
+          TABLET (Viên), POWDER (Gói/Bột), VIAL (Ống), SYRUP (Lọ/Siro), TUBE (Tuýp), BOTTLE (Chai)
+        
+        DosageUnit (đơn vị liều):
+          MG, MCG, G, IU, ML, PERCENT
+        
+        Timing (thời điểm dùng thuốc):
+          MORNING, NOON, AFTERNOON, EVENING, BEDTIME
+        
+        Note (ghi chú uống thuốc):
+          BEFORE_MEAL, AFTER_MEAL, WITH_MEAL, WITH_WATER, AVOID_ALCOHOL, AVOID_DAIRY
+        
+        Format output (chỉ JSON, không markdown):
+        {
+          "name": "Tên đơn thuốc hoặc tên bệnh nhân nếu có",
+          "description": "Mô tả ngắn đơn thuốc nếu có, hoặc null",
+          "userId": null,
+          "patientEmailAddress": null,
+          "startDate": "YYYY-MM-DD hoặc null nếu không có",
+          "message": "Lời nhắn từ bác sĩ nếu có, hoặc null",
+          "diagnosisNote": "Chẩn đoán bệnh nếu có, hoặc null",
+          "info": null,
+          "intakes": [
+            {
+              "drugName": "Tên thuốc",
+              "drugId": null,
+              "total": 10,
+              "unit": "MG",
+              "quantitative": 500,
+              "medicineForm": "TABLET",
+              "usage": "ORAL",
+              "timingList": [
+                { "timing": "MORNING", "quantity": 1 },
+                { "timing": "EVENING", "quantity": 1 }
+              ],
+              "noteList": ["BEFORE_MEAL"]
+            }
+          ]
+        }
+    """;
+
+        Map<String, Object> body = Map.of(
+                "system_instruction", Map.of(
+                        "parts", List.of(Map.of("text", systemPrompt))
+                ),
+                "contents", List.of(
+                        Map.of("parts", List.of(
+                                Map.of(
+                                        "inline_data", Map.of(
+                                                "mime_type", mimeType,
+                                                "data", base64Image
+                                        )
+                                ),
+                                Map.of("text", "Hãy đọc đơn thuốc trong hình và trả về JSON theo đúng format yêu cầu.")
+                        ))
+                )
+        );
+
+        try {
+            Map response = geminiRestClient.post()
+                    .uri("/{model}:generateContent", geminiModel)
+                    .body(body)
+                    .retrieve()
+                    .body(Map.class);
+
+            List<Map> candidates = (List<Map>) response.get("candidates");
+            Map content = (Map) candidates.get(0).get("content");
+            List<Map> parts = (List<Map>) content.get("parts");
+            String rawText = (String) parts.get(0).get("text");
+
+            rawText = rawText.trim()
+                    .replaceAll("(?s)```json", "")
+                    .replaceAll("```", "")
+                    .trim();
+
+            if (rawText.equalsIgnoreCase("null") || rawText.isEmpty()) {
+                log.warn("Gemini returned null or empty response");
+                return null;
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            return mapper.readValue(rawText, CreatePrescriptionRequest.class);
+        } catch (Exception e) {
+            log.error("Gemini scan error: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    public String ask(String prompt) {
+        try {
+            Map<String, Object> body = Map.of(
+                    "contents", List.of(
+                            Map.of("parts", List.of(
+                                    Map.of("text", prompt)
+                            ))
+                    )
+            );
+
+            Map response = geminiRestClient.post()
+                    .uri("/{model}:generateContent", geminiModel)
+                    .body(body)
+                    .retrieve()
+                    .body(Map.class);
+
+            List<Map> candidates = (List<Map>) response.get("candidates");
+            Map content = (Map) candidates.get(0).get("content");
+            List<Map> parts = (List<Map>) content.get("parts");
+            return (String) parts.get(0).get("text");
+
+        } catch (Exception e) {
+            log.error("Gemini error: {}", e.getMessage());
+            throw new RuntimeException("AI service error: " + e.getMessage());
+        }
+    }
+
+    // Có system prompt
+    public String askWithSystem(String systemPrompt, String userMessage) {
+        Map<String, Object> body = Map.of(
+                "system_instruction", Map.of(
+                        "parts", List.of(Map.of("text", systemPrompt))
+                ),
+                "contents", List.of(
+                        Map.of("parts", List.of(
+                                Map.of("text", userMessage)
+                        ))
+                )
+        );
+
+        Map response = geminiRestClient.post()
+                .uri("/{model}:generateContent", geminiModel)
+                .body(body)
+                .retrieve()
+                .body(Map.class);
+
+        List<Map> candidates = (List<Map>) response.get("candidates");
+        Map content = (Map) candidates.get(0).get("content");
+        List<Map> parts = (List<Map>) content.get("parts");
+        return (String) parts.get(0).get("text");
+    }
 
     @Override
     @PreAuthorize("hasAnyAuthority('MED', 'ADMIN')")
