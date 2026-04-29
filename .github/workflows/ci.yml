@@ -10,6 +10,37 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      # ===== DATABASE (fake for test) =====
+      DBMS_CONNECTION: jdbc:h2:mem:testdb
+      DBMS_USERNAME: sa
+      DBMS_PASSWORD: ""
+
+      # ===== JWT =====
+      JWT_SIGNER_KEY: test-key
+
+      # ===== ADMIN =====
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin
+
+      # ===== CLOUDINARY =====
+      CLOUDINARY_CLOUD_NAME: test
+      CLOUDINARY_API_KEY: test
+      CLOUDINARY_API_SECRET: test
+
+      # ===== MAIL =====
+      MAIL_USERNAME: test@gmail.com
+      MAIL_PASSWORD: test
+
+      # ===== GOOGLE =====
+      GOOGLE_CLIENT_ID: test
+      GOOGLE_CLIENT_SECRET: test
+      GOOGLE_API_KEY: test
+
+      # ===== FRONTEND =====
+      FE_URL: http://localhost
+      ACCEPT_PRESCRIPTION_ENDPOINT: /test
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

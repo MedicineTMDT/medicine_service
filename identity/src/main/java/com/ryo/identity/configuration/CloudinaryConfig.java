@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class CloudinaryConfig {
 
     @NonFinal
-    @Value("${cloudinary.name:name}")
+    @Value("${cloudinary.name:default}")
     String CLOUDINARY_CLOUD_NAME;
 
     @NonFinal
