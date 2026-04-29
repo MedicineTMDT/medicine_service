@@ -11,15 +11,15 @@ import org.springframework.context.annotation.Configuration;
 public class CloudinaryConfig {
 
     @NonFinal
-    @Value("${cloudinary.name}")
+    @Value("${cloudinary.name:name}")
     String CLOUDINARY_CLOUD_NAME;
 
     @NonFinal
-    @Value("${cloudinary.apiKey}")
+    @Value("${cloudinary.apiKey:apiKey}")
     String CLOUDINARY_API_KEY;
 
     @NonFinal
-    @Value("${cloudinary.password}")
+    @Value("${cloudinary.password:password}")
     String CLOUDINARY_API_SECRET;
 
 

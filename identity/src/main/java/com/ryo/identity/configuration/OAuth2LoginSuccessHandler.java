@@ -28,7 +28,7 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @NonFinal
-    @Value("${frontend.url}")
+    @Value("${frontend.url:url}")
     protected String frontendUrl;
 
     UserRepository userRepository;

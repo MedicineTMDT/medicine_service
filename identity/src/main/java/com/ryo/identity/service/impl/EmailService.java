@@ -18,13 +18,13 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.username:username}")
     private String emailAddress;
 
-    @Value("${frontend.url}")
+    @Value("${frontend.url:url}")
     private String fronend_url;
 
-    @Value("${frontend.accept_prescription_endpoint}")
+    @Value("${frontend.accept_prescription_endpoint:endpoint}")
     private String accept_prescription_endpoint;
 
     @Async

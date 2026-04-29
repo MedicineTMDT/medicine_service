@@ -44,7 +44,7 @@ public class UserServiceImpl {
     EmailService emailService;
 
     @NonFinal
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.username:username}")
     protected String emailAddress;
 
     public UserResponse editUserInfo(EditUserRequest request){

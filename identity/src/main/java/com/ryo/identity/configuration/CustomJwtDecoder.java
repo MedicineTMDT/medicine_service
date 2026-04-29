@@ -20,7 +20,7 @@ import java.util.Objects;
 @Component
 @Slf4j
 public class CustomJwtDecoder implements JwtDecoder {
-    @Value("${jwt.signerKey}")
+    @Value("${jwt.signerKey:signerKey}")
     private String signerKey;
 
     @Autowired

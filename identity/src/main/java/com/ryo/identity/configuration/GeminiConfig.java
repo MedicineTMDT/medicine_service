@@ -9,10 +9,10 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class GeminiConfig {
 
-    @Value("${google.api.key}")
+    @Value("${google.api.key:key}")
     private String apiKey;
 
-    @Value("${google.api.model:gemini-2.0-flash}")
+    @Value("${google.api.model:gemini-2.0-flash:model}")
     private String model;
 
     @Bean

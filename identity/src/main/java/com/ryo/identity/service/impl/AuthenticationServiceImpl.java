@@ -46,19 +46,19 @@ import java.util.UUID;
 public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @NonFinal
-    @Value("${jwt.signerKey}")
+    @Value("${jwt.signerKey:key}")
     protected String SIGNER_KEY;
 
     @NonFinal
-    @Value("${jwt.valid-duration}")
+    @Value("${jwt.valid-duration:duration}")
     protected long VALID_DURATION;
 
     @NonFinal
-    @Value("${jwt.refreshable-duration}")
+    @Value("${jwt.refreshable-duration:duration}")
     protected long REFRESHABLE_DURATION;
 
     @NonFinal
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.username:username}")
     protected String emailAddress;
 
     UserMapper userMapper;
