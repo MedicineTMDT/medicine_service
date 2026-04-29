@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     url: ${DBMS_CONNECTION}
-#    driverClassName: "com.mysql.cj.jdbc.Driver"
+    driverClassName: "org.postgresql.Driver"
     password: ${DBMS_PASSWORD}
     username: ${DBMS_USERNAME}
 
