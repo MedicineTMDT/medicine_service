@@ -1,0 +1,16 @@
+# Bảo mật: Chặn file chứa mật khẩu (Lỗi bạn vừa gặp)
+.env
+
+# IDE: Chặn các file cấu hình riêng của IntelliJ (thư mục .idea trong ảnh)
+.idea/
+*.iml
+
+# Build: Chặn thư mục chứa file đã biên dịch của Java/Maven
+target/
+
+# Log: Các file ghi nhật ký hệ thống
+*.log
+
+# Hệ điều hành: File rác của Windows
+Thumbs.db
+desktop.ini
