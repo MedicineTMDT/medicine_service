@@ -14,7 +14,7 @@
 
     <!-- List các submodules -->
     <modules>
-        <module>identity</module>
+        <module>identity-service</module>
     </modules>
 
 </project>
