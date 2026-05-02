@@ -9,10 +9,14 @@ services:
     url: ${IDENTITY_URL:http://localhost:8080}
   medicine:
     url: ${MEDICINE_URL:http://localhost:8081}
-  chat:
-    url: ${CHAT_URL:http://localhost:8082}
   prescription:
-    url: ${PRESCRIPTION:http://localhost:8083}
+    url: ${PRESCRIPTION_URL:http://localhost:8082}
+  email:
+    url: ${EMAIL_URL:http://localhost:8083}
+  user:
+    url: ${USER_URL:http://localhost:8084}
+  chat:
+    url: ${CHAT_URL:http://localhost:8000}
 
 spring:
   application:
@@ -26,6 +30,12 @@ spring:
           - Path=${app.api-prefix}/identity/**
           filters:
           - StripPrefix=2
+        - id: medicine_service
+          uri: ${services.medicine.url}
+          predicates:
+            - Path=${app.api-prefix}/medicine/**
+          filters:
+            - StripPrefix=2
         - id: chat_service
           uri: ${services.chat.url}
           predicates:

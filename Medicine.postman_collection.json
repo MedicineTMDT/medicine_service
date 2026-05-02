@@ -21,12 +21,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/register",
+					"raw": "http://localhost:8888/api/v1/auth/register",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -43,12 +43,12 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/verify-email?email=thanhtunglk0911@gmail.com&token=578949",
+					"raw": "http://localhost:8888/api/v1/auth/verify-email?email=thanhtunglk0911@gmail.com&token=578949",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -84,12 +84,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/login",
+					"raw": "http://localhost:8888/api/v1/auth/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -106,12 +106,12 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/verify-forgot-password?email=thanhtunglk0911@gmail.com&token=890776",
+					"raw": "http://localhost:8888/api/v1/auth/verify-forgot-password?email=thanhtunglk0911@gmail.com&token=890776",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -150,12 +150,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/logout",
+					"raw": "http://localhost:8888/api/v1/auth/logout",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -172,12 +172,12 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/users/forgot-password?email=thanhtunglk0911@gmail.com",
+					"raw": "http://localhost:8888/api/v1/users/forgot-password?email=thanhtunglk0911@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -220,12 +220,12 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/users/update-avatar-img",
+					"raw": "http://localhost:8888/api/v1/users/update-avatar-img",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -261,12 +261,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/users/edit",
+					"raw": "http://localhost:8888/api/v1/users/edit",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -302,12 +302,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/users/change-password",
+					"raw": "http://localhost:8888/api/v1/users/change-password",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -334,12 +334,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/users/c72d6307-b690-4f7c-9595-3a4f25187a0c",
+					"raw": "http://localhost:8888/api/v1/users/c72d6307-b690-4f7c-9595-3a4f25187a0c",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -373,12 +373,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/categories/147",
+					"raw": "http://localhost:8888/api/v1/categories/147",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -421,12 +421,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/categories/147",
+					"raw": "http://localhost:8888/api/v1/categories/147",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -460,12 +460,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/categories?page=1&size=10",
+					"raw": "http://localhost:8888/api/v1/categories?page=1&size=10",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -515,12 +515,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/categories",
+					"raw": "http://localhost:8888/api/v1/categories",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -563,12 +563,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/categories/search?page=0&size=10&name=Thuốc Hô Hấp",
+					"raw": "http://localhost:8888/api/v1/categories/search?page=0&size=10&name=Thuốc Hô Hấp",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -609,12 +609,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/drugs/2901",
+					"raw": "http://localhost:8888/api/v1/drugs/2901",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -648,12 +648,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/drugs?page=1&size=10",
+					"raw": "http://localhost:8888/api/v1/drugs?page=1&size=10",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -694,12 +694,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/drugs/2901/ingredients",
+					"raw": "http://localhost:8888/api/v1/drugs/2901/ingredients",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -734,12 +734,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/drugs/top10?name=MedS",
+					"raw": "http://localhost:8888/api/v1/drugs/top10?name=MedS",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -772,12 +772,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/drugs/search?page=1&size=10&name=phar",
+					"raw": "http://localhost:8888/api/v1/drugs/search?page=1&size=10&name=phar",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -818,12 +818,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/drugs/by-category/148?page=1&size=10",
+					"raw": "http://localhost:8888/api/v1/drugs/by-category/148?page=1&size=10",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -861,12 +861,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/drug-interactions/67",
+					"raw": "http://localhost:8888/api/v1/drug-interactions/67",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -905,12 +905,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/drug-interactions/search-by-ingredients",
+					"raw": "http://localhost:8888/api/v1/drug-interactions/search-by-ingredients",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -944,12 +944,12 @@
 					"raw": "[\r\n    \"Telbivudin\",\"Peginterferon-alpha 2b\",\"Peginterferon-alpha 2a\"\r\n]"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/category-detail/1",
+					"raw": "http://localhost:8888/api/v1/category-detail/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -976,12 +976,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/category-detail?page=0&size=5",
+					"raw": "http://localhost:8888/api/v1/category-detail?page=0&size=5",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -1017,12 +1017,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/category-detail/search?page=0&size=5&name=thuốc",
+					"raw": "http://localhost:8888/api/v1/category-detail/search?page=0&size=5&name=thuốc",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -1063,12 +1063,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/category-detail/by-category/148?page=0&size=5",
+					"raw": "http://localhost:8888/api/v1/category-detail/by-category/148?page=0&size=5",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -1115,12 +1115,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/requests",
+					"raw": "http://localhost:8888/api/v1/requests",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -1153,12 +1153,12 @@
 					"raw": "{\r\n  \"title\": \"string\",\r\n  \"content\": \"string\",\r\n  \"typeOfRequest\": \"ADD\"\r\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/requests?page=0&size=5",
+					"raw": "http://localhost:8888/api/v1/requests?page=0&size=5",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -1201,12 +1201,12 @@
 					"raw": "{\r\n  \"title\": \"string\",\r\n  \"content\": \"string\",\r\n  \"typeOfRequest\": \"ADD\"\r\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/requests/user/cae1bd0b-231d-43ef-b2a8-0284c520c991?page=0&size=5",
+					"raw": "http://localhost:8888/api/v1/requests/user/cae1bd0b-231d-43ef-b2a8-0284c520c991?page=0&size=5",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",
@@ -1251,12 +1251,12 @@
 					"raw": "{\r\n  \"title\": \"string\",\r\n  \"content\": \"string\",\r\n  \"typeOfRequest\": \"ADD\"\r\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/requests/type?type=ADD",
+					"raw": "http://localhost:8888/api/v1/requests/type?type=ADD",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8888",
 					"path": [
 						"api",
 						"v1",

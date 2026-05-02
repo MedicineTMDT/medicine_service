@@ -1,0 +1,63 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /medicine
+
+spring:
+  datasource:
+    url: ${DBMS_CONNECTION}
+    driverClassName: "org.postgresql.Driver"
+    password: ${DBMS_PASSWORD}
+    username: ${DBMS_USERNAME}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
+jwt:
+  signerKey: ${JWT_SIGNER_KEY}
+  valid-duration: 3600
+  refreshable-duration: 36000
+
+admin:
+  password: ${ADMIN_PASSWORD}
+  username: ${ADMIN_USERNAME}
+
+frontend:
+  url: ${FE_URL}
+  accept_prescription_endpoint: ${ACCEPT_PRESCRIPTION_ENDPOINT}
+
+cloudinary:
+  name: ${CLOUDINARY_CLOUD_NAME}
+  apiKey: ${CLOUDINARY_API_KEY}
+  password: ${CLOUDINARY_API_SECRET}
+
+google:
+  api:
+    key: ${GOOGLE_API_KEY}
+    model: gemini-2.5-flash

@@ -50,6 +50,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         if(isPublicEndpoint(exchange.getRequest()))
         {
+            log.info("This route is literally public");
             return chain.filter(exchange);
         }
 
