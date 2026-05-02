@@ -28,14 +28,18 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
+    @Autowired
+    private com.ryo.identity.repository.InvalidatedTokenRepository invalidatedTokenRepository;
+
     @Override
     public Jwt decode(String token) throws JwtException {
         try {
-            var response = authenticationService.introspect(
-                    IntrospectRequest.builder().token(token).build());
-            if (!response.isValid()) throw new JwtException("Invalid token");
-        } catch (JOSEException | ParseException e) {
-            throw new JwtException(e.getMessage());
+            com.nimbusds.jwt.SignedJWT signedJWT = com.nimbusds.jwt.SignedJWT.parse(token);
+            if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
+                throw new JwtException("Token has been logged out or invalidated");
+            }
+        } catch (ParseException e) {
+            throw new JwtException("Invalid token format");
         }
 
         if (Objects.isNull(nimbusJwtDecoder)) {
