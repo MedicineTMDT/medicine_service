@@ -115,8 +115,9 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     @Override
     public void logout(LogoutRequest request) throws ParseException, JOSEException{
         try{
-            var signedToken = verifyToken(request.getToken(), false);
-            log.error("Invalidated token in logout");
+            // Allow invalidating tokens that are expired but still in refresh window
+            var signedToken = verifyToken(request.getToken(), true);
+            log.info("Invalidated token in logout");
             String jit = signedToken.getJWTClaimsSet().getJWTID();
             Date expiryTime = signedToken.getJWTClaimsSet().getExpirationTime();
             invalidatedTokenRepository.save(
@@ -145,7 +146,10 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             log.info("Token not valid");
             var signedJWT = verifyToken(token, true);
             var jit = signedJWT.getJWTClaimsSet().getJWTID();
-            var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            
+            // Set the expiry of the invalidated token to the max refresh time so it's not immediately deleted
+            var expiryTime = new Date(signedJWT.getJWTClaimsSet().getIssueTime().toInstant()
+                    .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS).toEpochMilli());
 
             InvalidatedToken invalidatedToken =
                     InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
@@ -204,7 +208,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getId())
+                .subject(user.getUsername())
                 .issuer("med.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
