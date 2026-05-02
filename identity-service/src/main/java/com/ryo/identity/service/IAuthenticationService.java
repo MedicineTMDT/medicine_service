@@ -8,8 +8,6 @@ import com.ryo.identity.dto.request.LogoutRequest;
 import com.ryo.identity.dto.response.AuthenticationResponse;
 import com.ryo.identity.dto.response.IntrospectResponse;
 import com.ryo.identity.dto.response.UserResponse;
-import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.text.ParseException;
 

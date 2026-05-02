@@ -1,7 +1,5 @@
 package com.ryo.identity.entity;
 
-import com.ryo.identity.dto.response.DrugInteractionResponse;
-import com.ryo.identity.dto.response.DrugResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

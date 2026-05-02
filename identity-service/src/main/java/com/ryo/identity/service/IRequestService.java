@@ -1,9 +1,7 @@
 package com.ryo.identity.service;
 
 import com.ryo.identity.constant.TypeOfRequest;
-import com.ryo.identity.dto.request.CreatePrescriptionRequest;
 import com.ryo.identity.dto.request.CreateSuggestionRequest;
-import com.ryo.identity.entity.Prescription;
 import com.ryo.identity.entity.Request;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

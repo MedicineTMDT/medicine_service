@@ -3,11 +3,9 @@ package com.ryo.identity.dto.request;
 import com.ryo.identity.constant.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.antlr.v4.runtime.misc.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor

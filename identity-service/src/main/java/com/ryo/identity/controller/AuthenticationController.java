@@ -1,17 +1,16 @@
 package com.ryo.identity.controller;
 
+import com.ryo.identity.dto.request.CreateUserRequest;
+import com.ryo.identity.dto.request.IntrospectRequest;
+import com.ryo.identity.dto.request.LoginRequest;
+import com.ryo.identity.dto.request.LogoutRequest;
 import com.ryo.identity.dto.request.*;
 import com.ryo.identity.dto.response.APIResponse;
 import com.ryo.identity.dto.response.AuthenticationResponse;
 import com.ryo.identity.dto.response.IntrospectResponse;
 import com.ryo.identity.dto.response.UserResponse;
 import com.ryo.identity.service.impl.AuthenticationServiceImpl;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

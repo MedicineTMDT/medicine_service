@@ -1,19 +1,18 @@
 package com.ryo.identity.service.impl;
 
 import com.ryo.identity.constant.TypeOfRequest;
-import com.ryo.identity.dto.request.CreateSuggestionRequest;
 import com.ryo.identity.dto.response.NotificationResponse;
 import com.ryo.identity.entity.Request;
+import com.ryo.identity.repository.RequestRepository;
+import com.ryo.identity.dto.request.CreateSuggestionRequest;
 import com.ryo.identity.entity.User;
 import com.ryo.identity.exception.AppException;
 import com.ryo.identity.exception.ErrorCode;
-import com.ryo.identity.repository.RequestRepository;
 import com.ryo.identity.repository.UserRepository;
 import com.ryo.identity.service.IRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;

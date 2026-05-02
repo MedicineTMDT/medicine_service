@@ -1,0 +1,23 @@
+package com.ryo.medicine.dto.request;
+
+import lombok.Builder;
+import lombok.Data;
+
+import java.util.List;
+import java.util.Map;
+
+@Data
+@Builder
+public class DrugRequest {
+    private String name;
+    private String content;
+    private String document;
+    private String slug;
+    private Map<String, Object> metadata;
+    private List<String> image;
+    private List<String> ingredient;
+    private Map<String, Object> info;
+
+    private List<Integer> categoriesId;
+}
+

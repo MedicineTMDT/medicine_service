@@ -1,11 +1,9 @@
 package com.ryo.identity.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryo.identity.constant.Role;
-import com.ryo.identity.dto.response.AuthenticationResponse;
+import com.ryo.identity.service.impl.AuthenticationServiceImpl;
 import com.ryo.identity.entity.User;
 import com.ryo.identity.repository.UserRepository;
-import com.ryo.identity.service.impl.AuthenticationServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;

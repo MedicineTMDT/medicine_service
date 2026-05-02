@@ -1,6 +1,5 @@
 package com.ryo.identity.mapper;
 
-import com.ryo.identity.constant.Role;
 import com.ryo.identity.dto.request.CreateUserRequest;
 import com.ryo.identity.dto.request.EditUserRequest;
 import com.ryo.identity.dto.response.UserResponse;

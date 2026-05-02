@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ryo</groupId>
-	<artifactId>identity-service</artifactId>
+	<artifactId>medicine-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>identity</name>
+	<name>medicine</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -191,9 +191,9 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/ryo.identity/dto/**</exclude>
-						<exclude>com/ryo.identity/entity/**</exclude>
-						<exclude>com/ryo.identity/configuration/**</exclude>
+						<exclude>com/ryo.medicine/dto/**</exclude>
+						<exclude>com/ryo.medicine/entity/**</exclude>
+						<exclude>com/ryo.medicine/configuration/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
