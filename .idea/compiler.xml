@@ -13,12 +13,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processorPath>
+        <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="identity-service" />
-        <module name="medicine-service" />
+        <module name="request-service" />
         <module name="user-service" />
+        <module name="identity-service" />
+        <module name="prescription-service" />
+        <module name="medicine-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -27,6 +29,8 @@
       <module name="api-gateway" options="-parameters" />
       <module name="identity-service" options="-parameters" />
       <module name="medicine-service" options="-parameters" />
+      <module name="prescription-service" options="-parameters" />
+      <module name="request-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>

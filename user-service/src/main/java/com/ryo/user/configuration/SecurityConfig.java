@@ -21,22 +21,8 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/auth/register",
-            "/auth/login",
-            "/auth/logout",
-            "/auth/verify-email",
-            "/auth/verify-forgot-password",
-            "/auth/introspect",
-            "/users/forgot-password",
-
             "/",                       // index.html test
             "/index.html",
-
-            "/oauth2/**",              // cần mở cho google
-            "/login/oauth2/**",
-            "/oauth2/authorization/**", // <- FE gọi
-            "/login/oauth2/code/**",
-            "/oauth2/success/**"       // FE nhận token
     };
 
     @Autowired
@@ -46,10 +32,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(
                 request -> request
-                        .requestMatchers("/categories/**").permitAll()
-                        .requestMatchers("/category-detail/**").permitAll()
-                        .requestMatchers("/drugs/**").permitAll()
-                        .requestMatchers("/drug-interactions/**").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",

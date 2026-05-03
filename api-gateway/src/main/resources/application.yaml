@@ -36,6 +36,12 @@ spring:
             - Path=${app.api-prefix}/medicine/**
           filters:
             - StripPrefix=2
+        - id: prescription_service
+          uri: ${services.prescription.url}
+          predicates:
+            - Path=${app.api-prefix}/prescription/**
+          filters:
+            - StripPrefix=2
         - id: user_service
           uri: ${services.user.url}
           predicates:
