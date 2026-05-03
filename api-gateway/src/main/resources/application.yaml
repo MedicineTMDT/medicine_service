@@ -11,12 +11,10 @@ services:
     url: ${MEDICINE_URL:http://localhost:8081}
   prescription:
     url: ${PRESCRIPTION_URL:http://localhost:8082}
-  email:
-    url: ${EMAIL_URL:http://localhost:8083}
   user:
-    url: ${USER_URL:http://localhost:8084}
+    url: ${USER_URL:http://localhost:8083}
   request:
-    url: ${REQUEST_URL:http://localhost:8085}
+    url: ${REQUEST_URL:http://localhost:8084}
   chat:
     url: ${CHAT_URL:http://localhost:8000}
 
@@ -36,6 +34,12 @@ spring:
           uri: ${services.medicine.url}
           predicates:
             - Path=${app.api-prefix}/medicine/**
+          filters:
+            - StripPrefix=2
+        - id: user_service
+          uri: ${services.user.url}
+          predicates:
+            - Path=${app.api-prefix}/user/**
           filters:
             - StripPrefix=2
         - id: chat_service

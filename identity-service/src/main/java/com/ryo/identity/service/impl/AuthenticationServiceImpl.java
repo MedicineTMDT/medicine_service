@@ -150,10 +150,10 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
             invalidatedTokenRepository.save(invalidatedToken);
 
-            var username = signedJWT.getJWTClaimsSet().getSubject();
+            var userId = signedJWT.getJWTClaimsSet().getSubject();
 
             var user =
-                    userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+                    userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
             var newToken = generateToken(user);
             isValid = true;
