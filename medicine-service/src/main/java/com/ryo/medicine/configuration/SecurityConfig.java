@@ -21,29 +21,12 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/auth/register",
-            "/auth/login",
-            "/auth/logout",
-            "/auth/verify-email",
-            "/auth/verify-forgot-password",
-            "/auth/introspect",
-            "/users/forgot-password",
-
             "/",                       // index.html test
             "/index.html",
-
-            "/oauth2/**",              // cần mở cho google
-            "/login/oauth2/**",
-            "/oauth2/authorization/**", // <- FE gọi
-            "/login/oauth2/code/**",
-            "/oauth2/success/**"       // FE nhận token
     };
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
-
-    @Autowired
-    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -54,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/drugs/**").permitAll()
                         .requestMatchers("/drug-interactions/**").permitAll()
                         .requestMatchers(
-                                "/v3/api-docs/**",
+                                "/v1/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
@@ -68,10 +51,6 @@ public class SecurityConfig {
                         .decoder(customJwtDecoder)
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .oauth2Login(
-                        oauth -> oauth.successHandler(oAuth2LoginSuccessHandler)
-                );
 
         return httpSecurity.build();
     }

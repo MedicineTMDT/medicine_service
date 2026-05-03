@@ -1,9 +1,7 @@
 package com.ryo.medicine.configuration;
 
 import com.nimbusds.jwt.SignedJWT;
-import com.ryo.medicine.service.impl.AuthenticationServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -18,9 +16,6 @@ import java.text.ParseException;
 public class CustomJwtDecoder implements JwtDecoder {
     @Value("${jwt.signerKey:signerKey}")
     private String signerKey;
-
-    @Autowired
-    private AuthenticationServiceImpl authenticationService;
 
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
