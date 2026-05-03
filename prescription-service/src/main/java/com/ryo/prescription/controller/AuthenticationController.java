@@ -4,7 +4,6 @@ import com.ryo.prescription.dto.request.CreateUserRequest;
 import com.ryo.prescription.dto.request.IntrospectRequest;
 import com.ryo.prescription.dto.request.LoginRequest;
 import com.ryo.prescription.dto.request.LogoutRequest;
-import com.ryo.identity.dto.request.*;
 import com.ryo.prescription.dto.response.APIResponse;
 import com.ryo.prescription.dto.response.AuthenticationResponse;
 import com.ryo.prescription.dto.response.IntrospectResponse;
