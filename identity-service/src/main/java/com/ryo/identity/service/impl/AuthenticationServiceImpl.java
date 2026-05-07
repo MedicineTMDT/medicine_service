@@ -89,10 +89,12 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
+        log.info("stage2");
         if(!user.getVerifyEmail()){
             throw new AppException(ErrorCode.HAVE_NOT_VERIFY_EMAIL);
         }
         String password = request.getPassword();
+        log.info("password: " + password);
         var isValid = passwordEncoder.matches(password, user.getPassword());
         if(isValid){
             return AuthenticationResponse.builder()
@@ -106,6 +108,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                     .token(generateToken(user))
                     .build();
         }else{
+            log.info("wrong password" + password);
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
     }

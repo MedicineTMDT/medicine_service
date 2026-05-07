@@ -23,6 +23,7 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
             "/",                       // index.html test
             "/index.html",
+            "/forgot-password",
     };
 
     @Autowired
@@ -47,7 +48,7 @@ public class SecurityConfig {
                         .decoder(customJwtDecoder)
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
-
+        httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
     }
 

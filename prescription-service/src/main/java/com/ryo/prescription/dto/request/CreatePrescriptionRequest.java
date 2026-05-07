@@ -16,5 +16,7 @@ public record CreatePrescriptionRequest(
     String diagnosisNote,
     // thong tin lien quan cua don thuoc ( chong chi dinh. chong tuong tac ... )
     Map<String, Object> info,
-    List<IntakeRequest> intakes
+    List<IntakeRequest> intakes,
+
+    String imageBase64
 ) {}

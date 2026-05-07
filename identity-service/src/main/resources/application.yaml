@@ -9,6 +9,9 @@ spring:
     driverClassName: "org.postgresql.Driver"
     password: ${DBMS_PASSWORD}
     username: ${DBMS_USERNAME}
+    hikari:
+      maximum-pool-size: 2
+      minimum-idle: 1
 
   jpa:
     hibernate:

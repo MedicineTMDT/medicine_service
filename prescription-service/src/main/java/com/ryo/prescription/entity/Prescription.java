@@ -51,4 +51,6 @@ public class Prescription {
 
     private Boolean activate;
     private String orgPrescriptionId;
+
+    private String imageBase64;
 }

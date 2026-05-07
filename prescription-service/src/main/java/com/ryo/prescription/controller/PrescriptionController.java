@@ -19,7 +19,6 @@ import java.util.Base64;
 import java.util.List;
 
 @RestController
-@RequestMapping("/prescriptions")
 @RequiredArgsConstructor
 @Slf4j
 public class PrescriptionController {

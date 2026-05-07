@@ -75,7 +75,7 @@ public class UserControllerTest {
     }
 
     // ════════════════════════════════════════════════════════════
-    //  GET /users/{id}  — GET BY ID
+    //  GET /{id}  — GET BY ID
     // ════════════════════════════════════════════════════════════
 
     @Test
@@ -85,7 +85,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users/user-001"))
+                        .get("/user-001"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(1000))
                 .andExpect(MockMvcResultMatchers.jsonPath("result.id").value("user-001"))
@@ -104,7 +104,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users/not-exist"))
+                        .get("/not-exist"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -120,7 +120,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users/user-admin"))
+                        .get("/user-admin"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("result.role").value("ADMIN"));
     }
@@ -137,13 +137,13 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users/user-med"))
+                        .get("/user-med"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("result.role").value("MED"));
     }
 
     // ════════════════════════════════════════════════════════════
-    //  GET /users/username/{username}  — GET BY USERNAME
+    //  GET /username/{username}  — GET BY USERNAME
     // ════════════════════════════════════════════════════════════
 
     @Test
@@ -153,7 +153,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users/username/tung123"))
+                        .get("/username/tung123"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(1000))
                 .andExpect(MockMvcResultMatchers.jsonPath("result.username")
@@ -172,12 +172,12 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users/username/unknown"))
+                        .get("/username/unknown"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     // ════════════════════════════════════════════════════════════
-    //  POST /users/forgot-password  — FORGOT PASSWORD
+    //  POST /forgot-password  — FORGOT PASSWORD
     // ════════════════════════════════════════════════════════════
 
     @Test
@@ -187,7 +187,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/users/forgot-password")
+                        .post("/forgot-password")
                         .with(csrf())
                         .param("email", "thanhtung@gmail.com"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -204,7 +204,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/users/forgot-password")
+                        .post("/forgot-password")
                         .with(csrf())
                         .param("email", "notexist@gmail.com"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -214,13 +214,13 @@ public class UserControllerTest {
     void forgotPassword_missingEmailParam_returnsBadRequest() throws Exception {
         // Given — thiếu @RequestParam email
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/users/forgot-password")
+                        .post("/forgot-password")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     // ════════════════════════════════════════════════════════════
-    //  PUT /users/edit  — EDIT USER INFO
+    //  PUT /edit  — EDIT USER INFO
     // ════════════════════════════════════════════════════════════
 
     @Test
@@ -232,7 +232,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/edit")
+                        .put("/edit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -258,7 +258,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/edit")
+                        .put("/edit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -277,7 +277,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/edit")
+                        .put("/edit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -296,7 +296,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/edit")
+                        .put("/edit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -315,7 +315,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/edit")
+                        .put("/edit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -334,7 +334,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/edit")
+                        .put("/edit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -353,7 +353,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/edit")
+                        .put("/edit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -375,7 +375,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/edit")
+                        .put("/edit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -391,7 +391,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/edit")
+                        .put("/edit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -399,7 +399,7 @@ public class UserControllerTest {
     }
 
     // ════════════════════════════════════════════════════════════
-    //  PUT /users/change-password  — CHANGE PASSWORD
+    //  PUT /change-password  — CHANGE PASSWORD
     // ════════════════════════════════════════════════════════════
 
     @Test
@@ -410,7 +410,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/change-password")
+                        .put("/change-password")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -431,7 +431,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/change-password")
+                        .put("/change-password")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -449,7 +449,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/users/change-password")
+                        .put("/change-password")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -457,7 +457,7 @@ public class UserControllerTest {
     }
 
     // ════════════════════════════════════════════════════════════
-    //  PUT /users/update-avatar-img  — UPDATE AVATAR
+    //  PUT /update-avatar-img  — UPDATE AVATAR
     // ════════════════════════════════════════════════════════════
 
     @Test
@@ -474,7 +474,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .multipart("/users/update-avatar-img")
+                        .multipart("/update-avatar-img")
                         .file(file)
                         .with(request -> { request.setMethod("PUT"); return request; })
                         .with(csrf()))
@@ -498,7 +498,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .multipart("/users/update-avatar-img")
+                        .multipart("/update-avatar-img")
                         .file(file)
                         .with(request -> { request.setMethod("PUT"); return request; })
                         .with(csrf()))
@@ -511,7 +511,7 @@ public class UserControllerTest {
     void updateAvatar_missingFile_returnsBadRequest() throws Exception {
         // Given — không đính kèm file
         mockMvc.perform(MockMvcRequestBuilders
-                        .multipart("/users/update-avatar-img")
+                        .multipart("/update-avatar-img")
                         .with(request -> { request.setMethod("PUT"); return request; })
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -531,7 +531,7 @@ public class UserControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .multipart("/users/update-avatar-img")
+                        .multipart("/update-avatar-img")
                         .file(file)
                         .with(request -> { request.setMethod("PUT"); return request; })
                         .with(csrf()))

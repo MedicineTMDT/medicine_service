@@ -1,6 +1,7 @@
 package com.ryo.medicine.controller;
 
 import com.ryo.medicine.dto.request.DrugInteractionRequest;
+import com.ryo.medicine.dto.request.IngredientListRequest;
 import com.ryo.medicine.dto.response.APIResponse;
 import com.ryo.medicine.entity.DrugInteraction;
 import com.ryo.medicine.service.IDrugInteractionService;
@@ -60,10 +61,10 @@ public class DrugInteractionController {
     // GET BY LIST OF INGREDIENT NAMES
     @GetMapping("/search-by-ingredients")
     public APIResponse<List<DrugInteraction>> findByIngredientNames(
-            @RequestParam List<String> ingredientNames
+            @RequestBody IngredientListRequest ingredientNames
     ) {
         return APIResponse.<List<DrugInteraction>>builder()
-                .result(interactionService.getByListIngredientName(ingredientNames))
+                .result(interactionService.getByListIngredientName(ingredientNames.getIngredientNames()))
                 .build();
     }
 

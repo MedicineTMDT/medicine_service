@@ -283,6 +283,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                 .diagnosisNote(request.diagnosisNote())
                 .info(request.info())
                 .user(user)
+                .imageBase64(request.imageBase64())
                 .build();
         List<Intake> intakeList = new ArrayList<>();
         for(Map.Entry<LocalDateTime,List<Map<String, Object>>> item: seen.entrySet()){

@@ -14,6 +14,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -37,7 +38,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     private String[] publicEndpoint = {
             "/identity/auth/.*",
             "/medicine/.*",
-            "/prescription/.*"
+            "/users/forgot-password"
     };
 
     @NonFinal
@@ -52,7 +53,12 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         if(isPublicEndpoint(exchange.getRequest()))
         {
             log.info("This route is literally public");
-            return chain.filter(exchange);
+            if(pathContains(exchange.getRequest(), "medicine")){
+                if(isGetRequest(exchange.getRequest())){
+                    return chain.filter(exchange);
+                }
+            }
+            else return chain.filter(exchange);
         }
 
         // Authentication
@@ -85,6 +91,16 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         return Arrays.stream(publicEndpoint).anyMatch(s -> request.getURI().getPath().matches(
                 apiPrefix + s
         ));
+    }
+
+    private boolean isGetRequest(ServerHttpRequest request) {
+        return request.getMethod() == HttpMethod.GET;
+    }
+
+    private boolean pathContains(ServerHttpRequest request, String keyword) {
+        return request.getURI()
+                .getPath()
+                .contains(keyword);
     }
 
     Mono<Void> unauthenticated(ServerHttpResponse response) {

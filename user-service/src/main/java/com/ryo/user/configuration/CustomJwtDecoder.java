@@ -21,6 +21,7 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
+        log.info("why im here");
         try{
             SignedJWT signedJWT = SignedJWT.parse(token);
             return new Jwt(token,

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/users")
 @RequiredArgsConstructor @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(
@@ -52,7 +51,6 @@ public class UserController {
     public APIResponse<UserResponse> editUserInfo(
             @Valid @RequestBody EditUserRequest request
     ) {
-        log.info("edit user endpoint");
         return APIResponse.<UserResponse>builder()
                 .result(userService.editUserInfo(request))
                 .build();

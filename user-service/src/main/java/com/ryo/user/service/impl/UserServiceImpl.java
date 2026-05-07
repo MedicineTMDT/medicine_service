@@ -63,7 +63,7 @@ public class UserServiceImpl {
     public void changeUserPassword(String newPassword){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("username: " + username);
-        User user  = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User user  = userRepository.findById(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
