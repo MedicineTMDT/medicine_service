@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ryo.prescription.constant.*;
 import com.ryo.prescription.dto.MedicationSchedule;
+import com.ryo.prescription.dto.response.PrescriptionResponse;
 import com.ryo.prescription.entity.Intake;
 import com.ryo.prescription.entity.Prescription;
 import com.ryo.prescription.projection.PrescriptionProjection;
@@ -29,6 +30,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -59,6 +61,7 @@ public class PrescriptionControllerTest {
 
     // ── DTOs ─────────────────────────────────────────────────────
     private CreatePrescriptionRequest createRequest;
+    private PrescriptionResponse createResponse;
     private PrescriptionInfo prescriptionInfo;
 
     @BeforeEach
@@ -90,8 +93,18 @@ public class PrescriptionControllerTest {
                 "Uống đủ liều",
                 "Viêm hô hấp trên",
                 Map.of("contraindication", "Không dùng cho trẻ dưới 2 tuổi"),
-                List.of(intakeRequest)
+                List.of(intakeRequest),
+                "whatever"
         );
+
+        createResponse = PrescriptionResponse.builder()
+                .name("Đơn thuốc cảm cúm").description("Điều trị cảm cúm thông thường")
+                .userId("user-001").patientEmailAddress("patient@gmail.com")
+                .startDate(LocalDate.of(2025, 1, 1))
+                .message("Uống đủ liều").diagnosisNote("Viêm hô hấp trên")
+                .info(Map.of("contraindication", "Không dùng cho trẻ dưới 2 tuổi"))
+                .intakes(List.of(intakeRequest)).image("whatever")
+                .build();
 
         // Prescription entity
         prescription = new Prescription();
@@ -130,8 +143,8 @@ public class PrescriptionControllerTest {
                 "fake-image-bytes".getBytes()
         );
         Mockito.when(prescriptionService.extractPrescriptionFromImage(
-                        anyString(), eq(MediaType.IMAGE_JPEG_VALUE)))
-                .thenReturn(createRequest);
+                        any(MultipartFile.class)))
+                .thenReturn(createResponse);
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
@@ -157,8 +170,8 @@ public class PrescriptionControllerTest {
                 "fake-png-bytes".getBytes()
         );
         Mockito.when(prescriptionService.extractPrescriptionFromImage(
-                        anyString(), eq(MediaType.IMAGE_PNG_VALUE)))
-                .thenReturn(createRequest);
+                any(MultipartFile.class)))
+                .thenReturn(createResponse);
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
@@ -184,7 +197,7 @@ public class PrescriptionControllerTest {
                 "image", "prescription.jpg",
                 MediaType.IMAGE_JPEG_VALUE, "bytes".getBytes()
         );
-        Mockito.when(prescriptionService.extractPrescriptionFromImage(anyString(), anyString()))
+        Mockito.when(prescriptionService.extractPrescriptionFromImage(any(MultipartFile.class)))
                 .thenThrow(new RuntimeException("AI service unavailable"));
 
         // When Then

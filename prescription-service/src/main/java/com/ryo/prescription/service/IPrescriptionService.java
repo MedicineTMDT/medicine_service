@@ -1,5 +1,6 @@
 package com.ryo.prescription.service;
 
+import com.ryo.prescription.dto.response.PrescriptionResponse;
 import com.ryo.prescription.entity.Intake;
 import com.ryo.prescription.entity.Prescription;
 import com.ryo.prescription.projection.PrescriptionProjection;
@@ -7,6 +8,7 @@ import com.ryo.prescription.dto.request.CreatePrescriptionRequest;
 import com.ryo.prescription.dto.response.PrescriptionInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,5 +26,5 @@ public interface IPrescriptionService {
     void user_delete_prescription(String prescriptionId);
     String ask(String prompt);
     String askWithSystem(String systemPrompt, String userMessage);
-    CreatePrescriptionRequest extractPrescriptionFromImage(String base64Image, String mimeType);
+    PrescriptionResponse extractPrescriptionFromImage(MultipartFile image);
 }

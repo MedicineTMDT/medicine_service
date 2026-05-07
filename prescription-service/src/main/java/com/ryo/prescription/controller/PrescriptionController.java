@@ -1,5 +1,6 @@
 package com.ryo.prescription.controller;
 
+import com.ryo.prescription.dto.response.PrescriptionResponse;
 import com.ryo.prescription.entity.Intake;
 import com.ryo.prescription.entity.Prescription;
 import com.ryo.prescription.dto.request.CreatePrescriptionRequest;
@@ -26,13 +27,11 @@ public class PrescriptionController {
     private final IPrescriptionService prescriptionService;
 
     @PostMapping("/scan")
-    public CreatePrescriptionRequest scanPrescriptionImage(
+    public PrescriptionResponse scanPrescriptionImage(
             @RequestParam("image") MultipartFile image
     ) throws IOException {
-        byte[] imageBytes = image.getBytes();
-        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-        String mimeType = image.getContentType();
-        return prescriptionService.extractPrescriptionFromImage(base64Image, mimeType);
+
+        return prescriptionService.extractPrescriptionFromImage(image);
     }
     // -----------------------------
     // CREATE PRESCRIPTION (MED only)

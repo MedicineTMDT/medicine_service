@@ -3,6 +3,7 @@ package com.ryo.medicine.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ryo.medicine.dto.request.DrugInteractionRequest;
+import com.ryo.medicine.dto.request.IngredientListRequest;
 import com.ryo.medicine.entity.DrugInteraction;
 import com.ryo.medicine.service.IDrugInteractionService;
 import lombok.extern.slf4j.Slf4j;
@@ -274,14 +275,19 @@ public class DrugInteractionControllerTest {
     void searchByIngredients_happyPath() throws Exception {
         // Given
         List<DrugInteraction> interactions = List.of(interactionResponse);
+
         Mockito.when(interactionService.getByListIngredientName(
                         List.of("Warfarin", "Aspirin")))
                 .thenReturn(interactions);
-
+        IngredientListRequest request = IngredientListRequest.builder()
+                .ingredientNames(List.of("Warfarin", "Aspirin"))
+                .build();
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/drug-interactions/search-by-ingredients")
-                        .param("ingredientNames", "Warfarin", "Aspirin"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(1000))
                 .andExpect(MockMvcResultMatchers.jsonPath("result.length()").value(1))
@@ -299,11 +305,14 @@ public class DrugInteractionControllerTest {
         List<DrugInteraction> interactions = List.of(interactionResponse);
         Mockito.when(interactionService.getByListIngredientName(List.of("Warfarin")))
                 .thenReturn(interactions);
-
+        IngredientListRequest request = IngredientListRequest.builder()
+                .ingredientNames(List.of("Warfarin"))
+                .build();
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/drug-interactions/search-by-ingredients")
-                        .param("ingredientNames", "Warfarin"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("result.length()").value(1));
     }
@@ -314,11 +323,14 @@ public class DrugInteractionControllerTest {
         Mockito.when(interactionService.getByListIngredientName(
                         List.of("Vitamin C", "Zinc")))
                 .thenReturn(List.of());
-
+        IngredientListRequest request = IngredientListRequest.builder()
+                .ingredientNames(List.of("Vitamin C", "Zinc"))
+                .build();
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/drug-interactions/search-by-ingredients")
-                        .param("ingredientNames", "Vitamin C", "Zinc"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("result").isEmpty());
     }
@@ -335,11 +347,14 @@ public class DrugInteractionControllerTest {
         Mockito.when(interactionService.getByListIngredientName(
                         List.of("Warfarin", "Aspirin", "Ibuprofen")))
                 .thenReturn(List.of(interactionResponse, second));
-
+        IngredientListRequest request = IngredientListRequest.builder()
+                .ingredientNames(List.of("Warfarin", "Aspirin", "Ibuprofen"))
+                .build();
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/drug-interactions/search-by-ingredients")
-                        .param("ingredientNames", "Warfarin", "Aspirin", "Ibuprofen"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("result.length()").value(2))
                 .andExpect(MockMvcResultMatchers.jsonPath("result[1].hoatChat2Name")
