@@ -1,5 +1,7 @@
 package com.ryo.identity.service.impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -11,6 +13,7 @@ import com.ryo.identity.dto.MedicationSchedule;
 import com.ryo.identity.dto.request.CreatePrescriptionRequest;
 import com.ryo.identity.dto.request.IntakeRequest;
 import com.ryo.identity.dto.response.PrescriptionInfo;
+import com.ryo.identity.dto.response.PrescriptionResponse;
 import com.ryo.identity.entity.*;
 import com.ryo.identity.exception.AppException;
 import com.ryo.identity.exception.ErrorCode;
@@ -31,7 +34,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -48,11 +53,12 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     private final DrugInteractionServiceImpl drugInteractionService;
     private final IntakeRepository intakeRepository;
     private final EmailService emailService;
+    private final Cloudinary cloudinary;
 
     private final RestClient geminiRestClient;
     private final String geminiModel;
 
-    public CreatePrescriptionRequest extractPrescriptionFromImage(String base64Image, String mimeType) {
+    public PrescriptionResponse extractPrescriptionFromImage(MultipartFile file) {
         log.info("extractPrescriptionFromImage");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Jwt jwt = (Jwt) authentication.getPrincipal();
@@ -111,7 +117,14 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
           ]
         }
         """.formatted(email);
-
+        byte[] imageBytes = new byte[0];
+        try {
+            imageBytes = file.getBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+        String mimeType = file.getContentType();
         Map<String, Object> body = Map.of(
                 "system_instruction", Map.of(
                         "parts", List.of(Map.of("text", systemPrompt))
@@ -151,10 +164,20 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                 return null;
             }
 
+            Map uploadResult = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap("resource_type", "auto")
+            );
+            // Lấy URL ảnh
+            String url = uploadResult.get("secure_url").toString();
+
+
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            return mapper.readValue(rawText, CreatePrescriptionRequest.class);
+            PrescriptionResponse response_ = mapper.readValue(rawText, PrescriptionResponse.class);
+            response_.setImage(url);
+            return response_;
         } catch (Exception e) {
             log.error("Gemini scan error: {}", e.getMessage());
             return null;

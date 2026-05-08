@@ -15,13 +15,20 @@
         <processorPath>
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="identity" />
+        <module name="mono" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="api-gateway" target="21" />
+      <module name="identity-service" target="21" />
+      <module name="medicine-service" target="21" />
+      <module name="prescription-service" target="21" />
+      <module name="user-service" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="identity" options="-parameters" />
+      <module name="mono" options="-parameters" />
     </option>
   </component>
 </project>

@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ryo</groupId>
-	<artifactId>identity</artifactId>
+	<artifactId>mono</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>identity</name>
+	<name>mono</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
