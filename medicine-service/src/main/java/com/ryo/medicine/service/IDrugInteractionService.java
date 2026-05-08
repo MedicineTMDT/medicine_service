@@ -1,6 +1,7 @@
 package com.ryo.medicine.service;
 
 import com.ryo.medicine.dto.request.DrugInteractionRequest;
+import com.ryo.medicine.dto.response.PrescriptionInfo;
 import com.ryo.medicine.entity.DrugInteraction;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface IDrugInteractionService {
     void delete(Integer id);
     DrugInteraction get(Integer id);
     List<DrugInteraction> getByListIngredientName(List<String> nameList);
+    PrescriptionInfo getPrescriptionReview(List<Integer> listDrug);
 }

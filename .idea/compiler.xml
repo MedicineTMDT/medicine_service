@@ -16,10 +16,18 @@
         <processorPath>
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="user-service" />
         <module name="identity-service" />
-        <module name="prescription-service" />
         <module name="medicine-service" />
+        <module name="user-service" />
+      </profile>
+      <profile name="Annotation profile for prescription-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath>
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="prescription-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

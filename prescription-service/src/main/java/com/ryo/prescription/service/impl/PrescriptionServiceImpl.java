@@ -6,14 +6,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ryo.prescription.dto.MedicationSchedule;
+import com.ryo.prescription.dto.request.DrugList;
+import com.ryo.prescription.dto.response.APIResponse;
+import com.ryo.prescription.dto.response.DrugResponse;
 import com.ryo.prescription.dto.response.PrescriptionResponse;
 import com.ryo.prescription.entity.*;
 import com.ryo.prescription.exception.AppException;
 import com.ryo.prescription.exception.ErrorCode;
 import com.ryo.prescription.projection.PrescriptionProjection;
-import com.ryo.prescription.repository.DrugRepository;
 import com.ryo.prescription.repository.IntakeRepository;
 import com.ryo.prescription.repository.UserRepository;
+import com.ryo.prescription.repository.httpclient.MedicineClient;
 import com.ryo.prescription.service.IPrescriptionService;
 import com.ryo.prescription.dto.request.CreatePrescriptionRequest;
 import com.ryo.prescription.dto.request.IntakeRequest;
@@ -44,11 +47,10 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
 
     private final PrescriptionRepository prescriptionRepository;
     private final UserRepository userRepository;
-    private final DrugRepository drugRepository;
-    private final DrugInteractionServiceImpl drugInteractionService;
     private final IntakeRepository intakeRepository;
     private final EmailService emailService;
     private final Cloudinary cloudinary;
+    private final MedicineClient medicineClient;
 
     private final RestClient geminiRestClient;
     private final String geminiModel;
@@ -429,38 +431,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
 
     @Override
     public PrescriptionInfo getPrescriptionReview(List<Integer> listDrug) {
-        List<Map<String,Map<String, Object>>> info = new ArrayList<>();
-        List<Map<String, String>> drugInteractionResponseList = new ArrayList<>();
-        Set<String> list_ingredient = new HashSet<>();
-        for (Integer drugId : listDrug) {
-            Drug drug = drugRepository.findById(drugId)
-                    .orElseThrow(() -> new AppException(ErrorCode.DRUG_NOT_EXIST));
-            Map<String, Object> innerMap = drug.getInfo();
-            Map<String, Map<String, Object>> outerMap = new HashMap<>();
-            outerMap.put(drug.getName(), innerMap);
-            info.add(outerMap);
-
-            Set<String> ingredientIds = drug.getMergedIngredients().stream()
-                    .map(MergedIngredient::getName)
-                    .collect(Collectors.toSet());
-            List<DrugInteraction> interactionList =
-                    drugInteractionService.getByListIngredientName(ingredientIds.stream().toList());
-
-            for(DrugInteraction interaction: interactionList){
-                Map<String, String> drugInteraction = new HashMap<>();
-                drugInteraction.put("mucDoNghiemTrong", interaction.getMucDoNghiemTrong());
-                drugInteraction.put("hauQuaCuaTuongTac", interaction.getHauQuaCuaTuongTac());
-                drugInteraction.put("coCheTuongTac", interaction.getCoCheTuongTac());
-                drugInteraction.put("xuTriTuongTac", interaction.getXuTriTuongTac());
-                drugInteractionResponseList.add(drugInteraction);
-            }
-
-        }
-        return PrescriptionInfo.builder()
-                .info(info)
-                .drugInteractionResponseList(drugInteractionResponseList)
-                .build();
-
+        return medicineClient.getPrescriptionReview(DrugList.builder().druglist(listDrug).build()).getResult();
     }
 
     @Override

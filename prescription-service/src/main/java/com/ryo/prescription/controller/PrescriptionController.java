@@ -1,5 +1,6 @@
 package com.ryo.prescription.controller;
 
+import com.ryo.prescription.dto.request.DrugList;
 import com.ryo.prescription.dto.response.PrescriptionResponse;
 import com.ryo.prescription.entity.Intake;
 import com.ryo.prescription.entity.Prescription;
@@ -79,11 +80,11 @@ public class PrescriptionController {
     // -----------------------------
     // REVIEW DRUG INTERACTION
     // -----------------------------
-    @GetMapping("/review")
+    @PostMapping("/review")
     public PrescriptionInfo getPrescriptionReview(
-            @RequestParam List<Integer> listDrugIds
+            @RequestBody DrugList listDrugIds
     ) {
-        return prescriptionService.getPrescriptionReview(listDrugIds);
+        return prescriptionService.getPrescriptionReview(listDrugIds.getDruglist());
     }
 
     @PutMapping("/edit/{id}")

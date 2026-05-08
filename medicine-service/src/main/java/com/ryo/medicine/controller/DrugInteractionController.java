@@ -3,6 +3,8 @@ package com.ryo.medicine.controller;
 import com.ryo.medicine.dto.request.DrugInteractionRequest;
 import com.ryo.medicine.dto.request.IngredientListRequest;
 import com.ryo.medicine.dto.response.APIResponse;
+import com.ryo.medicine.dto.request.DrugList;
+import com.ryo.medicine.dto.response.PrescriptionInfo;
 import com.ryo.medicine.entity.DrugInteraction;
 import com.ryo.medicine.service.IDrugInteractionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -68,13 +70,12 @@ public class DrugInteractionController {
                 .build();
     }
 
-    // GET by one ingredient name
-//    @GetMapping("/find-by-ingredient")
-//    public APIResponse<List<DrugInteraction>> findByOneIngredientName(
-//            @RequestParam String name
-//    ) {
-//        return APIResponse.<List<DrugInteraction>>builder()
-//                .result(interactionService.getByListIngredientName(List.of(name)))
-//                .build();
-//    }
+    @GetMapping("/get-drug-interaction-preview")
+    public APIResponse<PrescriptionInfo> getPrescriptionReview(
+            @RequestBody DrugList drugList
+    ){
+        return APIResponse.<PrescriptionInfo>builder()
+                .result(interactionService.getPrescriptionReview(drugList.getDruglist()))
+                .build();
+    }
 }
