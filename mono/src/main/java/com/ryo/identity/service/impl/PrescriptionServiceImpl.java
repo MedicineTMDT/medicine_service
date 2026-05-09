@@ -237,7 +237,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     }
 
     @Override
-    @PreAuthorize("hasAnyAuthority('MED', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'MED', 'ADMIN')")
     public Prescription createPrescription(CreatePrescriptionRequest request) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findById(userId)
@@ -302,6 +302,11 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                 }
             }
         }
+        Map<String, Object> prescriptionInfo = request.info() != null ? new java.util.HashMap<>(request.info()) : new java.util.HashMap<>();
+        if (request.image() != null && !request.image().isEmpty()) {
+            prescriptionInfo.put("image", request.image());
+        }
+
         Prescription prescription = Prescription.builder()
                 .name(request.name())
                 .description(request.description())
@@ -309,7 +314,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                 .endDate(max.toLocalDate())
                 .message(request.message())
                 .diagnosisNote(request.diagnosisNote())
-                .info(request.info())
+                .info(prescriptionInfo)
                 .user(user)
                 .build();
         List<Intake> intakeList = new ArrayList<>();
@@ -324,12 +329,22 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         }
 
         prescription.setIntakes(intakeList);
-        prescription.setActivate(false);
         prescription.setOrgPrescriptionId("");
 
-        if(request.patientEmailAddress().isBlank() || request.patientEmailAddress().isEmpty()){
+        boolean isPatientRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("USER"));
+
+        if (isPatientRole) {
+            prescription.setActivate(true);
+            prescription.setPatient(user); // Patient is themselves
             return prescriptionRepository.save(prescription);
         }
+
+        prescription.setActivate(false);
+        if(request.patientEmailAddress() == null || request.patientEmailAddress().isBlank() || request.patientEmailAddress().isEmpty()){
+            return prescriptionRepository.save(prescription);
+        }
+
         User patient = userRepository.findByEmail(request.patientEmailAddress())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         prescription.setPatient(patient);
@@ -527,6 +542,22 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                 .orElseThrow(()-> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND))
                 ;
         prescriptionRepository.delete(prescription);
+    }
+
+
+    @Override
+    public Prescription update_message(String id, String message) {
+        Prescription prescription = prescriptionRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND));
+        
+        Map<String, Object> info = prescription.getInfo();
+        if (info == null) {
+            info = new HashMap<>();
+        }
+        info.put("ai_analysis", message);
+        prescription.setInfo(info);
+        
+        return prescriptionRepository.save(prescription);
     }
 
 

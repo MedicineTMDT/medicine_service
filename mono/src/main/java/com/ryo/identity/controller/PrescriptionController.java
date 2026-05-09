@@ -110,6 +110,14 @@ public class PrescriptionController {
         prescriptionService.accept_prescription(id);
     }
 
+    @PutMapping("/{id}/message")
+    public Prescription updatePrescriptionMessage(
+            @PathVariable String id,
+            @RequestBody String message
+    ) {
+        return prescriptionService.update_message(id, message);
+    }
+
 
     // -----------------------------
     // DOCTOR DELETE PRESCRIPTION

@@ -48,6 +48,7 @@ public class Prescription {
     @Column(columnDefinition = "json")
     private Map<String, Object> info;
 
+    @Column(columnDefinition = "TEXT")
     private String message;
     private String diagnosisNote;
 
