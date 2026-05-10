@@ -35,19 +35,19 @@ public class UserMapper {
 
     public void editUserRequest(User user, EditUserRequest request) {
 
-        if (request.getUsername() != null) {
+        if (request.getUsername() != null && !request.getUsername().isEmpty()) {
             user.setUsername(request.getUsername());
         }
 
-        if (request.getLastName() != null) {
+        if (request.getLastName() != null && !request.getLastName().isEmpty()) {
             user.setLastName(request.getLastName());
         }
 
-        if (request.getFirstName() != null) {
+        if (request.getFirstName() != null && !request.getFirstName().isEmpty()) {
             user.setFirstName(request.getFirstName());
         }
 
-        if (request.getAvatarImg() != null) {
+        if (request.getAvatarImg() != null && !request.getAvatarImg().isEmpty()) {
             user.setAvatarImg(request.getAvatarImg());
         }
     }
