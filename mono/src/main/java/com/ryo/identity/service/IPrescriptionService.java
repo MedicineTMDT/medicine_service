@@ -27,4 +27,5 @@ public interface IPrescriptionService {
     String ask(String prompt);
     String askWithSystem(String systemPrompt, String userMessage);
     PrescriptionResponse extractPrescriptionFromImage(MultipartFile image);
+    Prescription update_message(String id, String message);
 }
