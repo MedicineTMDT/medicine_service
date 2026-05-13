@@ -9,6 +9,8 @@ import com.ryo.identity.repository.DrugInteractionRepository;
 import com.ryo.identity.repository.MergedIngredientRepository;
 import com.ryo.identity.service.IDrugInteractionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,11 @@ public class DrugInteractionServiceImpl implements IDrugInteractionService {
 
     private final DrugInteractionRepository drugInteractionRepository;
     private final MergedIngredientRepository mergedIngredientRepository;
+
+    @Override
+    public Page<DrugInteraction> getAll(Pageable pageable) {
+        return drugInteractionRepository.findAll(pageable);
+    }
 
     private MergedIngredient getIngredient(Integer id) {
         if (id == null) return null;

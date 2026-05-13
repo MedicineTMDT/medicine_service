@@ -2,6 +2,7 @@ package com.ryo.identity.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.ryo.identity.dto.request.CreateUserRequest;
 import com.ryo.identity.dto.request.EditUserRequest;
 import com.ryo.identity.dto.response.UserResponse;
 import com.ryo.identity.entity.User;
@@ -9,6 +10,7 @@ import com.ryo.identity.exception.AppException;
 import com.ryo.identity.exception.ErrorCode;
 import com.ryo.identity.mapper.UserMapper;
 import com.ryo.identity.repository.UserRepository;
+import com.ryo.identity.service.IUserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,7 +38,7 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl {
+public class UserServiceImpl implements IUserService {
 
     JavaMailSender mailSender;
     UserRepository userRepository;
@@ -47,6 +51,38 @@ public class UserServiceImpl {
     @Value("${spring.mail.username:username}")
     protected String emailAddress;
 
+    @Override
+    public Page<UserResponse> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(userMapper::user2UserResponse);
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public UserResponse createUser(CreateUserRequest request) {
+        User user = userMapper.createUserRequest2User(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setVerifyEmail(true); // Admin created users are verified by default
+        return userMapper.user2UserResponse(userRepository.save(user));
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public UserResponse updateUserByAdmin(String id, EditUserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        
+        userMapper.editUserRequest(user, request);
+        return userMapper.user2UserResponse(userRepository.save(user));
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
     public UserResponse editUserInfo(EditUserRequest request){
         log.info("BEGIN_EDIT_USER_INFO");
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -66,6 +102,7 @@ public class UserServiceImpl {
         return userMapper.user2UserResponse(user);
     }
 
+    @Override
     public void changeUserPassword(String newPassword){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("userid: " + userid);
@@ -76,6 +113,7 @@ public class UserServiceImpl {
         emailService.sendPasswordChangeEmail(user);
     }
 
+    @Override
     public UserResponse getUserById(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -83,6 +121,7 @@ public class UserServiceImpl {
         return userMapper.user2UserResponse(user);
     }
 
+    @Override
     public void forgotPassword(String email){
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -93,6 +132,7 @@ public class UserServiceImpl {
         userRepository.save(user);
     }
 
+    @Override
     public String updateAvatarImg(MultipartFile file) {
         try {
             // Lấy email từ SecurityContext
@@ -128,6 +168,7 @@ public class UserServiceImpl {
         }
     }
 
+    @Override
     public UserResponse getUserByUserName(String userName){
         User user = userRepository.findByUsername(userName).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)

@@ -6,6 +6,8 @@ import com.ryo.identity.entity.DrugInteraction;
 import com.ryo.identity.service.IDrugInteractionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,13 @@ import java.util.List;
 public class DrugInteractionController {
 
     private final IDrugInteractionService interactionService;
+
+    @GetMapping
+    public APIResponse<Page<DrugInteraction>> getAll(Pageable pageable) {
+        return APIResponse.<Page<DrugInteraction>>builder()
+                .result(interactionService.getAll(pageable))
+                .build();
+    }
 
     // CREATE
     @PostMapping
