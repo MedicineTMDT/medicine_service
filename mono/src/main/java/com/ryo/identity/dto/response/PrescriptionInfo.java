@@ -11,5 +11,5 @@ import java.util.Map;
 @Builder
 public class PrescriptionInfo {
     private List<Map<String,Map<String, Object>>> info;
-    private List<Map<String, String>> drugInteractionResponseList;
+    private List<Map<String, Object>> drugInteractionResponseList;
 }
