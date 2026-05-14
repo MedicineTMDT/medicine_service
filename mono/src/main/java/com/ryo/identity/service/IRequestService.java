@@ -13,6 +13,7 @@ public interface IRequestService {
     Page<Request> getAllRequest(Pageable pageable);
     Page<Request> getAllRequestByTypeOfReques(Pageable pageable, TypeOfRequest typeOfRequest);
     Page<Request> getAllRequestByUserId(Pageable pageable, String userId);
-
-
+    void deleteRequest(String id);
+    Request updateRequest(String id, Request request);
+    Request getRequestById(String id);
 }

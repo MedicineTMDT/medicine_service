@@ -32,7 +32,6 @@ public class Request {
     Boolean proceed;
 
     @ManyToOne
-    @com.fasterxml.jackson.annotation.JsonIgnore
     @JoinColumn(name = "user_id")
     User user;
 }

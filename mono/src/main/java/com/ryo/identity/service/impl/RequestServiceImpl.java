@@ -78,4 +78,26 @@ public class RequestServiceImpl implements IRequestService {
     public Page<Request> getAllRequestByUserId(Pageable pageable, String userId) {
         return requestRepository.findByUserId(userId, pageable);
     }
+
+    @Override
+    public void deleteRequest(String id) {
+        requestRepository.deleteById(id);
+    }
+
+    @Override
+    public Request updateRequest(String id, Request request) {
+        Request existingRequest = requestRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.REQUEST_NOT_EXISTED)
+        );
+        existingRequest.setProceed(request.getProceed());
+        // We only allow updating the 'proceed' status from admin panel
+        return requestRepository.save(existingRequest);
+    }
+
+    @Override
+    public Request getRequestById(String id) {
+        return requestRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.REQUEST_NOT_EXISTED)
+        );
+    }
 }

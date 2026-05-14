@@ -36,6 +36,7 @@ public enum ErrorCode {
             "You are currently taking a similar active prescription",
             HttpStatus.BAD_REQUEST
     ),
+    REQUEST_NOT_EXISTED(1026, "Request not existed", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
