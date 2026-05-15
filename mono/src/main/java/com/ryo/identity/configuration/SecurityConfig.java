@@ -47,6 +47,10 @@ public class SecurityConfig {
     @Autowired
     private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
+    @Autowired
+    private CustomAuthorizationRequestResolver customAuthorizationRequestResolver;
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(
@@ -72,8 +76,11 @@ public class SecurityConfig {
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .oauth2Login(
-                        oauth -> oauth.successHandler(oAuth2LoginSuccessHandler)
+                .oauth2Login(oauth -> oauth
+                        .authorizationEndpoint(authorization -> authorization
+                                .authorizationRequestResolver(customAuthorizationRequestResolver)
+                        )
+                        .successHandler(oAuth2LoginSuccessHandler)
                 );
 
         return httpSecurity.build();

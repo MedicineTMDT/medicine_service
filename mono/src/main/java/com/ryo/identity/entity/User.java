@@ -47,4 +47,7 @@ public class User {
     @com.fasterxml.jackson.annotation.JsonIgnore
     List<Request> requestList = new ArrayList<>();
 
+    private String googleAccessToken;
+    private String googleRefreshToken;
+
 }

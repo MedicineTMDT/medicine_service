@@ -33,18 +33,26 @@ public class CustomJwtDecoder implements JwtDecoder {
         try {
             var response = authenticationService.introspect(
                     IntrospectRequest.builder().token(token).build());
-            if (!response.isValid()) throw new JwtException("Invalid token");
+
+            if (!response.isValid()) {
+                throw new JwtException("Token invalid or expired");
+            }
+
+            String tokenToDecode = (response.getToken() != null && !response.getToken().isEmpty())
+                    ? response.getToken()
+                    : token;
+
+            if (Objects.isNull(nimbusJwtDecoder)) {
+                SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
+                nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
+                        .macAlgorithm(MacAlgorithm.HS512)
+                        .build();
+            }
+
+            return nimbusJwtDecoder.decode(tokenToDecode);
+
         } catch (JOSEException | ParseException e) {
             throw new JwtException(e.getMessage());
         }
-
-        if (Objects.isNull(nimbusJwtDecoder)) {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
-            nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
-                    .macAlgorithm(MacAlgorithm.HS512)
-                    .build();
-        }
-        log.info("Passed customJWTDecoder");
-        return nimbusJwtDecoder.decode(token);
     }
 }

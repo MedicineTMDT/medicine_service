@@ -132,39 +132,46 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Override
     public IntrospectResponse introspect(IntrospectRequest request)
-            throws JOSEException, ParseException
-    {
+            throws JOSEException, ParseException {
         String token = request.getToken();
         boolean isValid = true;
-        try{
+
+        try {
             verifyToken(token, false);
-        }catch (AppException e){
+        } catch (AppException e) {
             isValid = false;
         }
-        if(!isValid){
+
+        if (!isValid) {
             log.info("Token not valid");
-            var signedJWT = verifyToken(token, true);
-            var jit = signedJWT.getJWTClaimsSet().getJWTID();
-            var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            try {
+                var signedJWT = verifyToken(token, true);
+                var jit = signedJWT.getJWTClaimsSet().getJWTID();
+                var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
-            InvalidatedToken invalidatedToken =
-                    InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+                invalidatedTokenRepository.save(
+                        InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build()
+                );
 
-            invalidatedTokenRepository.save(invalidatedToken);
+                var username = signedJWT.getJWTClaimsSet().getSubject();
+                var user = userRepository.findByUsername(username)
+                        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
-            var username = signedJWT.getJWTClaimsSet().getSubject();
+                var newToken = generateToken(user);
 
-            var user =
-                    userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+                return IntrospectResponse.builder()
+                        .valid(true)
+                        .token(newToken)
+                        .build();
 
-            var newToken = generateToken(user);
-            isValid = true;
-            return IntrospectResponse.builder()
-                    .valid(isValid)
-                    .token(newToken)
-                    .build();
+            } catch (AppException ex) {
+                return IntrospectResponse.builder()
+                        .valid(false)
+                        .build();
+            }
         }
-        return IntrospectResponse.builder().valid(isValid).build();
+
+        return IntrospectResponse.builder().valid(true).build();
     }
 
     public AuthenticationResponse verifyForgotPasswordToken(String token, String email){

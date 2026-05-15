@@ -2,6 +2,7 @@ package com.ryo.identity.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -54,6 +55,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     private final IntakeRepository intakeRepository;
     private final EmailService emailService;
     private final Cloudinary cloudinary;
+    private final CalendarService calendarService;
 
     private final RestClient geminiRestClient;
     private final String geminiModel;
@@ -170,7 +172,6 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
             );
             // Lấy URL ảnh
             String url = uploadResult.get("secure_url").toString();
-
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
@@ -337,11 +338,14 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         if (isPatientRole) {
             prescription.setActivate(true);
             prescription.setPatient(user); // Patient is themselves
+
+            createGoogleCalendarIntake(intakeList, user);
             return prescriptionRepository.save(prescription);
         }
 
         prescription.setActivate(false);
         if(request.patientEmailAddress() == null || request.patientEmailAddress().isBlank() || request.patientEmailAddress().isEmpty()){
+            createGoogleCalendarIntake(intakeList, user);
             return prescriptionRepository.save(prescription);
         }
 
@@ -352,7 +356,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         Prescription result = prescriptionRepository.save(prescription);
         emailService.sendPrescriptionConfirmationEmail
                 (patient,user.getFirstName(),result.getId());
-
+        createGoogleCalendarIntake(intakeList, user);
         return result;
     }
 
@@ -551,7 +555,6 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         prescriptionRepository.delete(prescription);
     }
 
-
     @Override
     public Prescription update_message(String id, String message) {
         Prescription prescription = prescriptionRepository.findById(id)
@@ -567,5 +570,75 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
         return prescriptionRepository.save(prescription);
     }
 
+    private void createGoogleCalendarIntake(List<Intake> intakeList, User user) {
+        ObjectMapper mapper = new ObjectMapper();
 
+        boolean hasGoogleToken = user.getGoogleAccessToken() != null
+                && user.getGoogleRefreshToken() != null;
+
+        for (Intake intake : intakeList) {
+            try {
+                List<Map<String, Object>> info = intake.getInfo();
+
+                String desc = info.stream()
+                        .map(item -> {
+                            List<String> parts = new ArrayList<>();
+                            
+                            Object drugName = item.get("drugName");
+                            if (drugName != null && !drugName.toString().isBlank()) {
+                                parts.add("Drug Name: " + drugName);
+                            }
+
+                            Object medicineForm = item.get("medicineForm");
+                            if (medicineForm != null && !medicineForm.toString().isBlank()) {
+                                parts.add("Medicine Form: " + medicineForm);
+                            }
+
+                            Object usage = item.get("usage");
+                            if (usage != null && !usage.toString().isBlank()) {
+                                parts.add("Usage: " + usage);
+                            }
+
+                            Object noteObj = item.get("noteList");
+                            if (noteObj instanceof List<?> noteList && !noteList.isEmpty()) {
+
+                                String notes = noteList.stream()
+                                        .filter(Objects::nonNull)
+                                        .map(String::valueOf)
+                                        .filter(s -> !s.isBlank())
+                                        .collect(Collectors.joining(", "));
+
+                                if (!notes.isBlank()) {
+                                    parts.add("Notes: " + notes);
+                                }
+                            }
+
+                            return String.join("\n", parts);
+                        })
+                        .filter(s -> !s.isBlank())
+                        .collect(Collectors.joining("\n-------------------\n"));
+
+                if (hasGoogleToken) {
+                    calendarService.addEventToGoogleCalendar(
+                            user.getGoogleAccessToken(),
+                            user.getGoogleRefreshToken(),
+                            intake.getPrescription().getName(),
+                            desc,
+                            intake.getTime()
+                    );
+                } else {
+                    String link = calendarService.generateGoogleCalendarLink(
+                            intake.getPrescription().getName(),
+                            desc,
+                            intake.getTime()
+                    );
+                    log.info("Calendar link: {}", link);
+                }
+
+            } catch (Exception e) {
+                log.error("Failed to create calendar event for intake {}: {}",
+                        intake.getId(), e.getMessage());
+            }
+        }
+    }
 }
