@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/categories/**").permitAll()
                         .requestMatchers("/api/v1/category-detail/**").permitAll()
                         .requestMatchers("/api/v1/drugs/**").permitAll()
+                        .requestMatchers("/api/v1/merged-ingredient/**").permitAll()
                         .requestMatchers("/api/v1/drug-interactions/**").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
