@@ -3,10 +3,10 @@ server:
 
 spring:
   datasource:
-    url: ${DBMS_CONNECTION}
-    driverClassName: "org.postgresql.Driver"
-    password: ${DBMS_PASSWORD}
-    username: ${DBMS_USERNAME}
+    url: ${DBMS_CONNECTION:jdbc:postgresql://localhost:5432/test}
+    driverClassName: org.postgresql.Driver
+    username: ${DBMS_USERNAME:test}
+    password: ${DBMS_PASSWORD:test}
 
   jpa:
     hibernate:
@@ -16,8 +16,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: ${MAIL_USERNAME:test@gmail.com}
+    password: ${MAIL_PASSWORD:test-password}
     properties:
       mail:
         smtp:
@@ -31,31 +31,31 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
+            client-id: ${GOOGLE_CLIENT_ID:test-google-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:test-google-client-secret}
             scope:
               - email
               - profile
 
 jwt:
-  signerKey: ${JWT_SIGNER_KEY}
+  signerKey: ${JWT_SIGNER_KEY:test-jwt-secret}
   valid-duration: 3600
   refreshable-duration: 36000
 
 admin:
-  password: ${ADMIN_PASSWORD}
-  username: ${ADMIN_USERNAME}
+  username: ${ADMIN_USERNAME:admin}
+  password: ${ADMIN_PASSWORD:admin123}
 
 frontend:
-  url: ${FE_URL}
-  accept_prescription_endpoint: ${ACCEPT_PRESCRIPTION_ENDPOINT}
+  url: ${FE_URL:http://localhost:3000}
+  accept_prescription_endpoint: ${ACCEPT_PRESCRIPTION_ENDPOINT:/accept-prescription}
 
 cloudinary:
-  name: ${CLOUDINARY_CLOUD_NAME}
-  apiKey: ${CLOUDINARY_API_KEY}
-  password: ${CLOUDINARY_API_SECRET}
+  name: ${CLOUDINARY_CLOUD_NAME:test-cloud}
+  apiKey: ${CLOUDINARY_API_KEY:test-key}
+  apiSecret: ${CLOUDINARY_API_SECRET:test-secret}
 
 google:
   api:
-    key: ${GOOGLE_API_KEY}
+    key: ${GOOGLE_API_KEY:test-google-api-key}
     model: gemini-2.5-flash

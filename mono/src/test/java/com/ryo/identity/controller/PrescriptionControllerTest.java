@@ -148,7 +148,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .multipart("/scan")
+                        .multipart("/api/v1/prescriptions/scan")
                         .file(image)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -175,7 +175,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .multipart("/scan")
+                        .multipart("/api/v1/prescriptions/scan")
                         .file(image)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -185,7 +185,7 @@ public class PrescriptionControllerTest {
     void scan_missingFile_returnsBadRequest() throws Exception {
         // Given — không đính kèm file
         mockMvc.perform(MockMvcRequestBuilders
-                        .multipart("/scan")
+                        .multipart("/api/v1/prescriptions/scan")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -202,7 +202,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .multipart("/scan")
+                        .multipart("/api/v1/prescriptions/scan")
                         .file(image)
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -221,7 +221,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("")
+                        .post("/api/v1/prescriptions")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -238,7 +238,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("")
+                        .post("/api/v1/prescriptions")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content("{}"))
@@ -254,7 +254,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("")
+                        .post("/api/v1/prescriptions")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
@@ -276,7 +276,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/prescription-001/copy")
+                        .post("/api/v1/prescriptions/prescription-001/copy")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("id")
@@ -293,7 +293,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/not-exist/copy")
+                        .post("/api/v1/prescriptions/not-exist/copy")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -341,7 +341,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/search/name")
+                        .get("/api/v1/prescriptions/search/name")
                         .param("name", "xyz"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("content").isEmpty());
@@ -350,7 +350,7 @@ public class PrescriptionControllerTest {
     @Test
     void searchByName_missingParam_returnsBadRequest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/search/name"))
+                        .get("/api/v1/prescriptions/search/name"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -398,7 +398,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/search/date")
+                        .get("/api/v1/prescriptions/search/date")
                         .param("start", "2000-01-01")
                         .param("end", "2000-01-02"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -408,7 +408,7 @@ public class PrescriptionControllerTest {
     @Test
     void searchByDate_missingStartParam_returnsBadRequest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/search/date")
+                        .get("/api/v1/prescriptions/search/date")
                         .param("end", "2025-01-31"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -416,7 +416,7 @@ public class PrescriptionControllerTest {
     @Test
     void searchByDate_missingEndParam_returnsBadRequest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/search/date")
+                        .get("/api/v1/prescriptions/search/date")
                         .param("start", "2025-01-01"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -425,7 +425,7 @@ public class PrescriptionControllerTest {
     void searchByDate_invalidDateFormat_returnsBadRequest() throws Exception {
         // Given — ngày sai định dạng
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/search/date")
+                        .get("/api/v1/prescriptions/search/date")
                         .param("start", "01-01-2025")
                         .param("end", "31-01-2025"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -443,7 +443,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/review")
+                        .get("/api/v1/prescriptions/review")
                         .param("listDrugIds", "1", "2", "3"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath(
@@ -466,7 +466,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/review")
+                        .get("/api/v1/prescriptions/review")
                         .param("listDrugIds", "1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath(
@@ -476,7 +476,7 @@ public class PrescriptionControllerTest {
     @Test
     void review_missingParam_returnsBadRequest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/review"))
+                        .get("/api/v1/prescriptions/review"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -488,7 +488,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/review")
+                        .get("/api/v1/prescriptions/review")
                         .param("listDrugIds", "999"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -505,7 +505,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/edit/intake-001")
+                        .put("/api/v1/prescriptions/edit/intake-001")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("id").value("intake-001"));
@@ -519,7 +519,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/edit/not-exist")
+                        .put("/api/v1/prescriptions/edit/not-exist")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -536,7 +536,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/prescription-001"))
+                        .get("/api/v1/prescriptions/prescription-001"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("id").value("prescription-001"))
                 .andExpect(MockMvcResultMatchers.jsonPath("name").value("Đơn thuốc cảm cúm"));
@@ -550,7 +550,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/not-exist"))
+                        .get("/api/v1/prescriptions/not-exist"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -565,7 +565,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/prescription-001/accept")
+                        .put("/api/v1/prescriptions/prescription-001/accept")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -578,7 +578,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/prescription-001/accept")
+                        .put("/api/v1/prescriptions/prescription-001/accept")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -591,7 +591,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/not-exist/accept")
+                        .put("/api/v1/prescriptions/not-exist/accept")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -608,7 +608,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/prescription-001/doctor")
+                        .delete("/api/v1/prescriptions/prescription-001/doctor")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -621,7 +621,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/not-exist/doctor")
+                        .delete("/api/v1/prescriptions/not-exist/doctor")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -634,7 +634,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/prescription-002/doctor")
+                        .delete("/api/v1/prescriptions/prescription-002/doctor")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -651,7 +651,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/prescription-001/patient")
+                        .delete("/api/v1/prescriptions/prescription-001/patient")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -664,7 +664,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/not-exist/patient")
+                        .delete("/api/v1/prescriptions/not-exist/patient")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -677,7 +677,7 @@ public class PrescriptionControllerTest {
 
         // When Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/prescription-002/patient")
+                        .delete("/api/v1/prescriptions/prescription-002/patient")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
