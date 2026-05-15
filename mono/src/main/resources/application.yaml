@@ -7,6 +7,8 @@ spring:
     driverClassName: org.postgresql.Driver
     username: ${DBMS_USERNAME:test}
     password: ${DBMS_PASSWORD:test}
+    hikari:
+      maximum-pool-size: 2
 
   jpa:
     hibernate:

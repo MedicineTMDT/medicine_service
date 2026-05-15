@@ -44,6 +44,7 @@ public class User {
     Boolean verifyEmail;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     List<Request> requestList = new ArrayList<>();
 
 }

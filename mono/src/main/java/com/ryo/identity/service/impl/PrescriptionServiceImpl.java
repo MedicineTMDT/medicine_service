@@ -449,8 +449,8 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
     @Override
     public PrescriptionInfo getPrescriptionReview(List<Integer> listDrug) {
         List<Map<String,Map<String, Object>>> info = new ArrayList<>();
-        List<Map<String, String>> drugInteractionResponseList = new ArrayList<>();
-        Set<String> list_ingredient = new HashSet<>();
+        List<Map<String, Object>> drugInteractionResponseList = new ArrayList<>();
+        Set<String> selectedIngredients = new HashSet<>();
         for (Integer drugId : listDrug) {
             Drug drug = drugRepository.findById(drugId)
                     .orElseThrow(() -> new AppException(ErrorCode.DRUG_NOT_EXIST));
@@ -462,15 +462,22 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
             Set<String> ingredientIds = drug.getMergedIngredients().stream()
                     .map(MergedIngredient::getName)
                     .collect(Collectors.toSet());
+            selectedIngredients.addAll(ingredientIds);
             List<DrugInteraction> interactionList =
                     drugInteractionService.getByListIngredientName(ingredientIds.stream().toList());
 
             for(DrugInteraction interaction: interactionList){
-                Map<String, String> drugInteraction = new HashMap<>();
+                String ing1 = interaction.getHoatChat1Name();
+                String ing2 = interaction.getHoatChat2Name();
+                boolean matchedFromSelected =
+                        selectedIngredients.contains(ing1) && selectedIngredients.contains(ing2);
+
+                Map<String, Object> drugInteraction = new HashMap<>();
                 drugInteraction.put("mucDoNghiemTrong", interaction.getMucDoNghiemTrong());
                 drugInteraction.put("hauQuaCuaTuongTac", interaction.getHauQuaCuaTuongTac());
                 drugInteraction.put("coCheTuongTac", interaction.getCoCheTuongTac());
                 drugInteraction.put("xuTriTuongTac", interaction.getXuTriTuongTac());
+                drugInteraction.put("matchedFromSelected", matchedFromSelected);
                 drugInteractionResponseList.add(drugInteraction);
             }
 

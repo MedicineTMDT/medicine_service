@@ -1,16 +1,19 @@
 package com.ryo.identity.controller;
 
-import com.ryo.identity.dto.request.ChangePasswordRequest;
+import com.ryo.identity.dto.request.CreateUserRequest;
 import com.ryo.identity.dto.request.EditUserRequest;
+import com.ryo.identity.dto.request.ChangePasswordRequest;
 import com.ryo.identity.dto.response.APIResponse;
 import com.ryo.identity.dto.response.UserResponse;
-import com.ryo.identity.service.impl.UserServiceImpl;
+import com.ryo.identity.service.IUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +27,39 @@ import org.springframework.web.multipart.MultipartFile;
 )
 public class UserController {
 
-    UserServiceImpl userService;
+    IUserService userService;
+
+    @GetMapping
+    public APIResponse<Page<UserResponse>> getAllUsers(Pageable pageable) {
+        return APIResponse.<Page<UserResponse>>builder()
+                .result(userService.getAllUsers(pageable))
+                .build();
+    }
+
+    @PostMapping
+    public APIResponse<UserResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
+        return APIResponse.<UserResponse>builder()
+                .result(userService.createUser(request))
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public APIResponse<UserResponse> updateUserByAdmin(
+            @PathVariable String id,
+            @Valid @RequestBody EditUserRequest request
+    ) {
+        return APIResponse.<UserResponse>builder()
+                .result(userService.updateUserByAdmin(id, request))
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public APIResponse<Void> deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
+        return APIResponse.<Void>builder()
+                .message("User deleted successfully")
+                .build();
+    }
 
     @GetMapping("/{id}")
     public APIResponse<UserResponse> getUserById(@PathVariable String id) {
