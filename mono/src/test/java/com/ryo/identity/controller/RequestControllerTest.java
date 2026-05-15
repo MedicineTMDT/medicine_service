@@ -83,12 +83,12 @@ public class RequestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("id").value("request-001"))
-                .andExpect(MockMvcResultMatchers.jsonPath("title")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.id").value("request-001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.title")
                         .value("Thêm tính năng tìm kiếm nâng cao"))
-                .andExpect(MockMvcResultMatchers.jsonPath("typeOfRequest")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.typeOfRequest")
                         .value("ADD"))
-                .andExpect(MockMvcResultMatchers.jsonPath("proceed").value(false));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.proceed").value(false));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class RequestControllerTest {
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(content))
                     .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andExpect(MockMvcResultMatchers.jsonPath("typeOfRequest")
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.result.typeOfRequest")
                             .value(type.name()));
         }
     }
@@ -169,12 +169,12 @@ public class RequestControllerTest {
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("content[0].id")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].id")
                         .value("request-001"))
-                .andExpect(MockMvcResultMatchers.jsonPath("content[0].typeOfRequest")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].typeOfRequest")
                         .value("ADD"))
-                .andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("totalPages").value(1));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalElements").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalPages").value(1));
     }
 
     @Test
@@ -192,8 +192,8 @@ public class RequestControllerTest {
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("content").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(0));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalElements").value(0));
     }
 
     @Test
@@ -211,8 +211,8 @@ public class RequestControllerTest {
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(25))
-                .andExpect(MockMvcResultMatchers.jsonPath("totalPages").value(3));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalElements").value(25))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalPages").value(3));
     }
 
     // ════════════════════════════════════════════════════════════
@@ -236,9 +236,9 @@ public class RequestControllerTest {
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("content[0].typeOfRequest")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].typeOfRequest")
                         .value("ADD"))
-                .andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(1));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalElements").value(1));
     }
 
     @Test
@@ -264,7 +264,7 @@ public class RequestControllerTest {
                         .get("/api/v1/requests/type")
                         .param("type", "EDIT"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("content[0].typeOfRequest")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].typeOfRequest")
                         .value("EDIT"));
     }
 
@@ -291,7 +291,7 @@ public class RequestControllerTest {
                         .get("/api/v1/requests/type")
                         .param("type", "QUESTION"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("content[0].typeOfRequest")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].typeOfRequest")
                         .value("QUESTION"));
     }
 
@@ -310,8 +310,8 @@ public class RequestControllerTest {
                         .get("/api/v1/requests/type")
                         .param("type", "ADD"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("content").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(0));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalElements").value(0));
     }
 
     @Test
@@ -351,11 +351,11 @@ public class RequestControllerTest {
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("content[0].id")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].id")
                         .value("request-001"))
-                .andExpect(MockMvcResultMatchers.jsonPath("content[0].title")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].title")
                         .value("Thêm tính năng tìm kiếm nâng cao"))
-                .andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(1));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalElements").value(1));
     }
 
     @Test
@@ -372,8 +372,8 @@ public class RequestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/requests/user/user-002"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("content").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(0));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalElements").value(0));
     }
 
     @Test
@@ -398,14 +398,14 @@ public class RequestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/requests/user/user-001"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("content.length()").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("content[0].typeOfRequest")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content.length()").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].typeOfRequest")
                         .value("ADD"))
-                .andExpect(MockMvcResultMatchers.jsonPath("content[1].typeOfRequest")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[1].typeOfRequest")
                         .value("EDIT"))
-                .andExpect(MockMvcResultMatchers.jsonPath("content[1].proceed")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[1].proceed")
                         .value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("totalElements").value(2));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.totalElements").value(2));
     }
 
     @Test
