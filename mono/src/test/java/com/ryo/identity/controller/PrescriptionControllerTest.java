@@ -681,4 +681,49 @@ public class PrescriptionControllerTest {
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
+    @Test
+    void updatePrescriptionMessage_happyPath() throws Exception {
+        // Given
+        String message = "Uống thuốc sau khi ăn";
+
+        prescription.setMessage(message);
+
+        Mockito.when(
+                prescriptionService.update_message(
+                        eq("prescription-001"),
+                        eq(message)
+                )
+        ).thenReturn(prescription);
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/prescriptions/prescription-001/message")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(message)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    @Test
+    void updatePrescriptionMessage_emptyMessage_happyPath() throws Exception {
+        // Given
+        String message = "";
+
+        prescription.setMessage(message);
+
+        Mockito.when(
+                prescriptionService.update_message(
+                        eq("prescription-001"),
+                        eq(message)
+                )
+        ).thenReturn(prescription);
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/prescriptions/prescription-001/message")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(message)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
 }

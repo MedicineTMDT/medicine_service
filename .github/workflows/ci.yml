@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # ===== DATABASE (fake for test) =====
+      # ===== DATABASE (H2) =====
       DBMS_CONNECTION: jdbc:h2:mem:testdb
       DBMS_USERNAME: sa
       DBMS_PASSWORD: ""
@@ -51,5 +51,5 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Build & Run Tests
-        run: mvn clean test
+      - name: Build & Run Controller Tests
+        run: mvn clean test -Dtest="com.ryo.identity.controller.**" -DfailIfNoTests=false

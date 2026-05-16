@@ -420,4 +420,119 @@ public class RequestControllerTest {
                         .get("/api/v1/requests/user/not-exist"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
+    @Test
+    void getRequestById_success() throws Exception {
+        // Given
+        Request request = Request.builder()
+                .id("request-001")
+                .title("Need new feature")
+                .content("Add dark mode")
+                .typeOfRequest(TypeOfRequest.ADD)
+                .build();
+
+        Mockito.when(requestService.getRequestById("request-001"))
+                .thenReturn(request);
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/v1/requests/request-001")
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.id")
+                        .value("request-001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.title")
+                        .value("Need new feature"));
+    }
+    @Test
+    void getRequestById_notFound_returnsBadRequest() throws Exception {
+        // Given
+        Mockito.when(requestService.getRequestById("invalid-id"))
+                .thenThrow(new RuntimeException("Request not found"));
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/v1/requests/invalid-id")
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+    @Test
+    void updateRequest_success() throws Exception {
+        // Given
+        Request request = Request.builder()
+                .id("request-001")
+                .title("Updated title")
+                .content("Updated description")
+                .typeOfRequest(TypeOfRequest.ADD)
+                .build();
+
+        Mockito.when(requestService.updateRequest(
+                        Mockito.eq("request-001"),
+                        ArgumentMatchers.any(Request.class)
+                ))
+                .thenReturn(request);
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/requests/request-001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.id")
+                        .value("request-001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.title")
+                        .value("Updated title"));
+    }
+    @Test
+    void updateRequest_notFound_returnsBadRequest() throws Exception {
+        // Given
+        Request request = Request.builder()
+                .title("Updated title")
+                .build();
+
+        Mockito.when(requestService.updateRequest(
+                        Mockito.eq("invalid-id"),
+                        ArgumentMatchers.any(Request.class)
+                ))
+                .thenThrow(new RuntimeException("Request not found"));
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/requests/invalid-id")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+    @Test
+    void deleteRequest_success() throws Exception {
+        // Given
+        Mockito.doNothing()
+                .when(requestService)
+                .deleteRequest("request-001");
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/requests/request-001")
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("Request deleted successfully"));
+
+        Mockito.verify(requestService)
+                .deleteRequest("request-001");
+    }
+    @Test
+    void deleteRequest_notFound_returnsBadRequest() throws Exception {
+        // Given
+        Mockito.doThrow(new RuntimeException("Request not found"))
+                .when(requestService)
+                .deleteRequest("invalid-id");
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/requests/invalid-id")
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
 }

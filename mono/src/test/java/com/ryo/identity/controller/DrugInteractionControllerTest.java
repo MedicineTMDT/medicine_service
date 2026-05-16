@@ -13,6 +13,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -367,5 +370,29 @@ public class DrugInteractionControllerTest {
                         .get("/api/v1/drug-interactions/search-by-ingredients")
                         .param("ingredientNames", "Warfarin"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+    @Test
+    void getAll_happyPath() throws Exception {
+        // Given
+        Page<DrugInteraction> page = new PageImpl<>(List.of(interactionResponse));
+
+        Mockito.when(interactionService.getAll(ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(page);
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/v1/drug-interactions")
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("code").value(1000))
+                .andExpect(MockMvcResultMatchers.jsonPath("result.content.length()")
+                        .value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("result.content[0].id")
+                        .value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("result.content[0].hoatChat1Name")
+                        .value("Warfarin"))
+                .andExpect(MockMvcResultMatchers.jsonPath("result.content[0].hoatChat2Name")
+                        .value("Aspirin"));
     }
 }

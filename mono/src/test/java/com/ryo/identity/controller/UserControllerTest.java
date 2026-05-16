@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ryo.identity.constant.Role;
 import com.ryo.identity.dto.request.ChangePasswordRequest;
+import com.ryo.identity.dto.request.CreateUserRequest;
 import com.ryo.identity.dto.request.EditUserRequest;
 import com.ryo.identity.dto.response.UserResponse;
 import com.ryo.identity.service.impl.UserServiceImpl;
@@ -15,6 +16,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
@@ -22,6 +26,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -534,6 +540,128 @@ public class UserControllerTest {
                         .multipart("/api/v1/users/update-avatar-img")
                         .file(file)
                         .with(request -> { request.setMethod("PUT"); return request; })
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+    @Test
+    void getAllUsers_success() throws Exception {
+        // Given
+        Page<UserResponse> page = new PageImpl<>(List.of(userResponse));
+
+        Mockito.when(userService.getAllUsers(ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(page);
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].id")
+                        .value("user-001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.content[0].email")
+                        .value("thanhtung@gmail.com"));
+    }
+    @Test
+    void createUser_success() throws Exception {
+        // Given
+        CreateUserRequest request = CreateUserRequest.builder()
+                .email("thanhtung@gmail.com")
+                .password("12345678")
+                .username("tung123")
+                .firstName("Tung")
+                .lastName("Bui")
+                .build();
+
+        Mockito.when(userService.createUser(ArgumentMatchers.any(CreateUserRequest.class)))
+                .thenReturn(userResponse);
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.id")
+                        .value("user-001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.email")
+                        .value("thanhtung@gmail.com"));
+    }
+    @Test
+    void createUser_invalidRequest_returnsBadRequest() throws Exception {
+        // Given
+        CreateUserRequest request = CreateUserRequest.builder()
+                .email("")
+                .password("")
+                .build();
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+    @Test
+    void updateUserByAdmin_success() throws Exception {
+        // Given
+        Mockito.when(userService.updateUserByAdmin(
+                        ArgumentMatchers.eq("user-001"),
+                        ArgumentMatchers.any(EditUserRequest.class)
+                ))
+                .thenReturn(userResponse);
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/user-001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(editUserRequest))
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.id")
+                        .value("user-001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.username")
+                        .value("tung123"));
+    }
+    @Test
+    void updateUserByAdmin_invalidRequest_returnsBadRequest() throws Exception {
+        // Given
+        EditUserRequest request = EditUserRequest.builder()
+                .username("")
+                .build();
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/user-001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+    @Test
+    void deleteUser_success() throws Exception {
+        // Given
+        Mockito.doNothing()
+                .when(userService)
+                .deleteUser("user-001");
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users/user-001")
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("User deleted successfully"));
+
+        Mockito.verify(userService)
+                .deleteUser("user-001");
+    }
+    @Test
+    void deleteUser_userNotFound_returnsBadRequest() throws Exception {
+        // Given
+        Mockito.doThrow(new RuntimeException("User not found"))
+                .when(userService)
+                .deleteUser("invalid-id");
+
+        // When Then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users/invalid-id")
                         .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
