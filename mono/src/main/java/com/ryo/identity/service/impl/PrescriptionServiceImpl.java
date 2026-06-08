@@ -502,7 +502,7 @@ public class PrescriptionServiceImpl implements IPrescriptionService {
                 .anyMatch(auth -> auth.getAuthority().equals("USER"));
         if(isUser){
             return prescriptionRepository
-                    .findByPatient_IdAndIdAndActivateTrue(userId,prescriptionId)
+                    .findByPatient_IdAndId(userId,prescriptionId)
                     .orElseThrow(() -> new AppException(ErrorCode.PRESCRIPTION_NOT_FOUND));
         }
         return prescriptionRepository
