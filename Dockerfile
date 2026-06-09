@@ -1,26 +1,26 @@
 # ==========================================
-# GIAI ĐOẠN 1: BUILD CODE (Dùng ảnh Maven mới hỗ trợ Java 21)
+# GIAI ĐOẠN 1: BUILD CODE
 # ==========================================
 FROM maven:3.9.6-eclipse-temurin-21 AS builder
 WORKDIR /app
 
-# Copy toàn bộ thư mục dự án vào Docker
+# Copy toàn bộ dự án
 COPY . .
 
-# Chạy lệnh build toàn bộ project
-RUN mvn clean package -DskipTests
+# Chỉ build module mono (để đảm bảo file jar nằm trong mono/target)
+# -pl là project list, -am là also make (build các phụ thuộc nếu có)
+RUN mvn clean package -DskipTests -pl mono -am
 
 # ==========================================
-# GIAI ĐOẠN 2: CHẠY APP (Dùng ảnh Java 21 siêu nhẹ)
+# GIAI ĐOẠN 2: CHẠY APP
 # ==========================================
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Lấy file .jar đã được tạo ra từ thư mục target của module identity
-COPY --from=builder /app/identity/target/*.jar app.jar
+# Kiểm tra kỹ tên file JAR. 
+# Nếu trong mono/target có nhiều file jar, lệnh *.jar có thể gây lỗi.
+# Tốt nhất là trỏ đích danh hoặc dùng lệnh copy cẩn thận.
+COPY --from=builder /app/mono/target/*.jar app.jar
 
-# Khai báo port ứng dụng đang chạy
 EXPOSE 8080
-
-# Lệnh để khởi động ứng dụng
 CMD ["java", "-jar", "app.jar"]

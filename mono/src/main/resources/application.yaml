@@ -1,5 +1,7 @@
 server:
   port: 8080
+  # THÊM DÒNG NÀY: Để Spring Boot hiểu nó đang đứng sau Next.js Proxy
+  forward-headers-strategy: framework 
 
 spring:
   datasource:
@@ -33,8 +35,10 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID:test-google-client-id}
-            client-secret: ${GOOGLE_CLIENT_SECRET:test-google-client-secret}
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            # THÊM DÒNG NÀY: Ép Google trả kết quả về đúng tên miền/IP của Frontend
+            redirect-uri: "${FE_URL}/login/oauth2/code/google" 
             scope:
               - email
               - profile
@@ -59,5 +63,5 @@ cloudinary:
 
 google:
   api:
-    key: ${GOOGLE_API_KEY:test-google-api-key}
+    key: ${GOOGLE_API_KEY}
     model: gemini-2.5-flash
